@@ -7,7 +7,12 @@ public enum HotkeySlot
     F,
     Q,
     W,
-    E
+    E,
+    R,
+    Num1,
+    Num2,
+    Num3,
+    Num4
 }
 
 // 슬롯에 무엇이 들어있는지 구분 (스킬 / 소비 아이템).
