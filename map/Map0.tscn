@@ -3,12 +3,16 @@
 [ext_resource type="PackedScene" uid="uid://dpwhlxqq6j0ps" path="res://common/BaseMap.tscn" id="1_v233w"]
 [ext_resource type="Script" uid="uid://be2mpba7kf4jv" path="res://scripts/core/MobSpawner.cs" id="2_ogk54"]
 [ext_resource type="Resource" uid="uid://btwt2ttn73gcb" path="res://data/mob/Mob0.tres" id="3_6hmbn"]
+[ext_resource type="Environment" uid="uid://dlo4d1tui6x2k" path="res://demo/assets/Environment.tres" id="4_6hmbn"]
+[ext_resource type="CameraAttributesPractical" uid="uid://c41dvxjh8vfeb" path="res://demo/assets/CameraAttributes.tres" id="5_pooee"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_4kxuq"]
 size = Vector3(12, 1, 5)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_mm1bc"]
 size = Vector3(12, 1, 5)
+
+[sub_resource type="Compositor" id="Compositor_bafel"]
 
 [node name="BaseMap" unique_id=2021675321 instance=ExtResource("1_v233w")]
 MapId = "Map0"
@@ -84,3 +88,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.098509, 23.925898, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="7" unique_id=875615377]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 7, 0)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." index="8" unique_id=1779785000]
+environment = ExtResource("4_6hmbn")
+camera_attributes = ExtResource("5_pooee")
+compositor = SubResource("Compositor_bafel")

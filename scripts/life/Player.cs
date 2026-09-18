@@ -14,7 +14,7 @@ public partial class Player : Life<PlayerStats>
 	private bool _isAttacking = false;
 
 
-	private readonly string[] _attackAnimations = { "Stab1", "Swing1", "Swing2" };
+	private readonly string[] _attackAnimations = { "Stab1", "Swing1", "Swing2", "Swing3" };
 
 	public override void _Ready()
 	{

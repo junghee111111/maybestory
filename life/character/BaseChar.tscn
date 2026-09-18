@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://xdy0bsv3u4yb"]
+
+[ext_resource type="PackedScene" uid="uid://chbcmws12xrv0" path="res://models/BaseChar.glb" id="1_nga4d"]
+
+[node name="BaseChar" unique_id=1037696582 instance=ExtResource("1_nga4d")]
+
+[node name="Skeleton3D" parent="Armature" parent_id_path=PackedInt32Array(519459614) index="0" unique_id=1333787180]
+bones/0/rotation = Quaternion(-2.9802326e-08, 1.1920927e-07, -2.5243543e-29, 1)
+bones/1/rotation = Quaternion(-3.5527137e-15, -1.1920927e-07, 4.2351645e-22, 1)
+bones/2/rotation = Quaternion(-3.5527103e-15, 1.19209275e-07, -4.235168e-22, 1)
+bones/3/rotation = Quaternion(3.3881318e-21, 1.0658141e-14, 4.2351627e-22, 1)
+bones/5/rotation = Quaternion(1.441507e-07, -8.1131496e-08, -0.37517452, 0.92695427)
+bones/6/rotation = Quaternion(0.05069523, -0.010489149, -0.18233277, 0.98187315)
+bones/7/rotation = Quaternion(-4.712151e-09, 1.8016195e-07, 0.024568059, 0.99969816)
+bones/8/rotation = Quaternion(0.5314865, 0.46225625, 0.44746104, 0.55101717)
+bones/9/rotation = Quaternion(3.0979237e-07, -2.2158407e-07, 0.8373391, 0.5466839)
+bones/10/rotation = Quaternion(1.4415066e-07, 8.113147e-08, 0.37517452, 0.92695427)
+bones/11/rotation = Quaternion(0.05069523, 0.010489149, 0.18233277, 0.98187315)
+bones/12/rotation = Quaternion(-2.8207932e-09, -1.8049828e-07, -0.024568057, 0.99969816)
+bones/13/rotation = Quaternion(0.5333418, -0.46386987, -0.44552076, 0.54943836)
+bones/14/rotation = Quaternion(0.5805571, 0.40367484, 0.5805572, -0.4036749)
+bones/15/rotation = Quaternion(-0.57088244, -3.311979e-08, -4.3445695e-08, 0.8210318)
+bones/16/rotation = Quaternion(2.1973005e-16, 8.8817837e-16, 3.3635242e-15, 1)
+bones/17/rotation = Quaternion(-3.1497106e-07, -3.6921372e-07, -0.7071068, 0.7071068)
+bones/19/rotation = Quaternion(-0.57088244, 3.311979e-08, 4.3445695e-08, 0.8210318)
+bones/20/rotation = Quaternion(2.1973005e-16, -8.8817837e-16, -3.3635242e-15, 1)
+bones/21/rotation = Quaternion(-3.1497106e-07, 3.6921372e-07, 0.7071068, 0.7071068)
+
+[node name="BoneAttachment3D" type="BoneAttachment3D" parent="Armature/Skeleton3D" index="1" unique_id=744610692]
+transform = Transform3D(-0.10384276, 0.00284645, 0.9945897, 0.9922348, 0.069125056, 0.10339909, -0.068456694, 0.99760383, -0.010002518, -0.600307, 0.49422497, 0.24062863)
+bone_name = "Weapon.R"
+bone_idx = 13

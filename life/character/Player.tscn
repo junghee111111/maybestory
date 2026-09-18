@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://db0d5qldeejq5"]
 
 [ext_resource type="Script" uid="uid://dfppp4b7rje8f" path="res://scripts/life/Player.cs" id="1_bfich"]
-[ext_resource type="PackedScene" uid="uid://chbcmws12xrv0" path="res://models/BaseChar.glb" id="2_58vmb"]
+[ext_resource type="PackedScene" uid="uid://xdy0bsv3u4yb" path="res://life/character/BaseChar.tscn" id="2_cl83g"]
 [ext_resource type="Resource" uid="uid://cxomhwywfxone" path="res://data/weapon/sword.tres" id="2_ohdos"]
 [ext_resource type="Script" uid="uid://jrn604hsdxto" path="res://scripts/life/PlayerStats.cs" id="3_wcxrr"]
 [ext_resource type="Script" uid="uid://cx6ueb7i6r450" path="res://scripts/combat/SkillManager.cs" id="4_wcxrr"]
@@ -17,7 +17,7 @@ collision_mask = 17
 script = ExtResource("1_bfich")
 StatsPath = NodePath("PlayerStats")
 
-[node name="BaseChar" parent="." unique_id=482962170 instance=ExtResource("2_58vmb")]
+[node name="BaseChar" parent="." unique_id=1037696582 instance=ExtResource("2_cl83g")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1587234634]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8026667, 0)
