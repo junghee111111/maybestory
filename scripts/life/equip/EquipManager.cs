@@ -9,6 +9,9 @@ public partial class EquipManager : Node
 	// Weapons are held in the left hand, so the visual is attached to this bone.
 	[Export] public string LeftHandBoneName = "mixamorig_LeftHand";
 
+	[ExportGroup("Maybe :: Current Equipment")]
+	[Export] public ItemData WeaponSlot;
+
 	public event Action<EquipSlot, ItemData> OnEquipmentChanged;
 
 	private Player _player;
@@ -23,6 +26,10 @@ public partial class EquipManager : Node
 		_player = GetOwner<Player>();
 		_stats = _player.GetNode<PlayerStats>("PlayerStats");
 		_weaponAttach = CreateWeaponAttachment();
+		if (WeaponSlot != null)
+		{
+			Equip(WeaponSlot);
+		}
 	}
 
 	private BoneAttachment3D CreateWeaponAttachment()

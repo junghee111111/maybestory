@@ -13,8 +13,6 @@ public partial class Player : Life<PlayerStats>
 	private EquipManager _equipManager;
 	private bool _isAttacking = false;
 
-	[ExportGroup("Maybe :: Equipment")]
-	[Export] public ItemData WeaponSlot;
 
 	private readonly string[] _attackAnimations = { "Stab1", "Swing1", "Swing2" };
 
@@ -33,8 +31,6 @@ public partial class Player : Life<PlayerStats>
 
 		// Equip basic sword
 		_equipManager = GetNode<EquipManager>("EquipManager");
-		_equipManager.Equip(WeaponSlot);
-
 	}
 
 	private void RefreshCurrentMap()
