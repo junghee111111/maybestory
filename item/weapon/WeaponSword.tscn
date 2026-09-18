@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://ckihjy6f5882k"]
+
+[ext_resource type="PackedScene" uid="uid://brt06u8pab57u" path="res://models/weapon/sword.fbx" id="1_ghxuq"]
+
+[node name="WeaponSword" type="Node3D" unique_id=46298827]
+
+[node name="Model" parent="." unique_id=913391018 instance=ExtResource("1_ghxuq")]
+transform = Transform3D(50, 0, 0, 0, 50, 0, 0, 0, 50, 0, 0, 0)

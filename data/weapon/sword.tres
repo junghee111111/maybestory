@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://cxomhwywfxone"]
+
+[ext_resource type="PackedScene" uid="uid://ckihjy6f5882k" path="res://item/weapon/WeaponSword.tscn" id="1_45stl"]
+[ext_resource type="Script" uid="uid://f6lxe00ai3lg" path="res://resources/ItemData.cs" id="1_uqj7r"]
+
+[resource]
+script = ExtResource("1_uqj7r")
+ItemId = "Sword"
+ItemName = "한손 검"
+Description = "한손 검이다."
+Type = 1
+Slot = 4
+EquipModelScene = ExtResource("1_45stl")
+metadata/_custom_type_script = "uid://f6lxe00ai3lg"

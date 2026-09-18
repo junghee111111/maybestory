@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://bvg62f8hq0qwc"]
+
+[ext_resource type="Script" uid="uid://cy6n1lyk128sj" path="res://scripts/life/MobSmall.cs" id="1_1mf86"]
+[ext_resource type="Script" uid="uid://chrha5elc00f" path="res://scripts/life/MobStats.cs" id="2_a0en1"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4kxuq"]
+height = 1.6008301
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mti6b"]
+height = 1.5917969
+
+[node name="BaseMobSmall" type="CharacterBody3D" unique_id=1769357514]
+collision_layer = 4
+collision_mask = 9
+script = ExtResource("1_1mf86")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=179537389]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.80633545, 0)
+shape = SubResource("CapsuleShape3D_4kxuq")
+
+[node name="MobStats" type="Node3D" parent="." unique_id=905110850]
+script = ExtResource("2_a0en1")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=596901717]
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1769415485]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.79928076, 0)
+shape = SubResource("CapsuleShape3D_mti6b")

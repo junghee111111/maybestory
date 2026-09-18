@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://dw72i24hj5mtw"]
+
+[ext_resource type="Script" uid="uid://dvijbywig0qns" path="res://scripts/core/MapManager.cs" id="1_6uab5"]
+[ext_resource type="Script" uid="uid://dyfhca5teb8b6" path="res://scripts/core/KeyboardManager.cs" id="1_jvlke"]
+[ext_resource type="Script" uid="uid://ray7pgjfjdxs" path="res://scripts/core/CameraController.cs" id="2_bp2gk"]
+[ext_resource type="PackedScene" uid="uid://db0d5qldeejq5" path="res://life/character/Player.tscn" id="3_bp2gk"]
+[ext_resource type="PackedScene" uid="uid://bdpbrf1dhgwxh" path="res://ui/MainHUD.tscn" id="4_uecoe"]
+
+[node name="GameWorld" type="Node3D" unique_id=1381227503]
+
+[node name="KeyboardManager" type="Node" parent="." unique_id=496760227]
+script = ExtResource("1_jvlke")
+
+[node name="CameraController" type="Node3D" parent="." unique_id=1990251166]
+script = ExtResource("2_bp2gk")
+RelativeYPos = 1.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraController" unique_id=1164072480]
+
+[node name="MapContainer" type="Node3D" parent="." unique_id=1481868759]
+
+[node name="MapManager" type="Node" parent="." unique_id=2061607347]
+script = ExtResource("1_6uab5")
+
+[node name="LifeContainer" type="Node3D" parent="." unique_id=312761622]
+
+[node name="Player" parent="LifeContainer" unique_id=166836753 instance=ExtResource("3_bp2gk")]
+
+[node name="UILayer" type="CanvasLayer" parent="." unique_id=1383225604]
+
+[node name="MainHud" parent="UILayer" unique_id=1516778780 instance=ExtResource("4_uecoe")]
+offset_left = 337.0
+offset_top = 349.0
+offset_right = 337.0
+offset_bottom = 349.0

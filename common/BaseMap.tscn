@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://dpwhlxqq6j0ps"]
+
+[ext_resource type="Script" uid="uid://cngdohvbda0bh" path="res://scripts/core/BaseMap.cs" id="1_mkb3j"]
+
+[node name="BaseMap" type="Node3D" unique_id=2021675321]
+script = ExtResource("1_mkb3j")
+CameraDistance = 7.0
+
+[node name="Platforms" type="Node3D" parent="." unique_id=1182424747]
+
+[node name="Life" type="Node3D" parent="." unique_id=744923453]
+
+[node name="Spawns" type="Node3D" parent="." unique_id=1153266662]
+
+[node name="Portals" type="Node3D" parent="." unique_id=542939105]
+
+[node name="MobSpawners" type="Node3D" parent="." unique_id=554641987]
+
+[node name="CamBounds" type="Node3D" parent="." unique_id=1934448944]
+
+[node name="Backgrounds" type="Node3D" parent="." unique_id=1343191887]

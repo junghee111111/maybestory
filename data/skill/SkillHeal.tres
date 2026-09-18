@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://ch4f7de62v0gv"]
+
+[ext_resource type="Script" uid="uid://766c87qapfbh" path="res://resources/SkillData.cs" id="1_dshqq"]
+
+[resource]
+script = ExtResource("1_dshqq")
+SkillId = "heal"
+SkillName = "힐"
+Description = "힐을 수행한다"
+Type = 3
+metadata/_custom_type_script = "uid://766c87qapfbh"

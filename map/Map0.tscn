@@ -1,0 +1,86 @@
+[gd_scene format=3 uid="uid://des8lwr1hv5ni"]
+
+[ext_resource type="PackedScene" uid="uid://dpwhlxqq6j0ps" path="res://common/BaseMap.tscn" id="1_v233w"]
+[ext_resource type="Script" uid="uid://be2mpba7kf4jv" path="res://scripts/core/MobSpawner.cs" id="2_ogk54"]
+[ext_resource type="Resource" uid="uid://btwt2ttn73gcb" path="res://data/mob/Mob0.tres" id="3_6hmbn"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_4kxuq"]
+size = Vector3(12, 1, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_mm1bc"]
+size = Vector3(12, 1, 5)
+
+[node name="BaseMap" unique_id=2021675321 instance=ExtResource("1_v233w")]
+MapId = "Map0"
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Platforms" parent_id_path=PackedInt32Array(1182424747) index="0" unique_id=601444740]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.902938, 0, 0)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Platforms/StaticBody3D" index="0" unique_id=143460813]
+mesh = SubResource("BoxMesh_4kxuq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Platforms/StaticBody3D" index="1" unique_id=1287688528]
+shape = SubResource("BoxShape3D_mm1bc")
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="Platforms" parent_id_path=PackedInt32Array(1182424747) index="1" unique_id=136250309]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.5238447, 0, 0)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Platforms/StaticBody3D2" index="0" unique_id=1719696721]
+mesh = SubResource("BoxMesh_4kxuq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Platforms/StaticBody3D2" index="1" unique_id=1193674122]
+shape = SubResource("BoxShape3D_mm1bc")
+
+[node name="StaticBody3D3" type="StaticBody3D" parent="Platforms" parent_id_path=PackedInt32Array(1182424747) index="2" unique_id=2002403704]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.085579, 2.1543016, 0)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Platforms/StaticBody3D3" index="0" unique_id=1915621484]
+mesh = SubResource("BoxMesh_4kxuq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Platforms/StaticBody3D3" index="1" unique_id=660573189]
+shape = SubResource("BoxShape3D_mm1bc")
+
+[node name="StaticBody3D4" type="StaticBody3D" parent="Platforms" parent_id_path=PackedInt32Array(1182424747) index="3" unique_id=210984163]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.572208, 1.7878995, 0)
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Platforms/StaticBody3D4" index="0" unique_id=2099899493]
+mesh = SubResource("BoxMesh_4kxuq")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Platforms/StaticBody3D4" index="1" unique_id=1000690872]
+shape = SubResource("BoxShape3D_mm1bc")
+
+[node name="Default" type="Marker3D" parent="Spawns" parent_id_path=PackedInt32Array(1153266662) index="0" unique_id=1731500046]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9680643, 0)
+
+[node name="Node3D" type="Node3D" parent="MobSpawners" parent_id_path=PackedInt32Array(554641987) index="0" unique_id=1088224444]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.324192, 4.5141997, 0)
+script = ExtResource("2_ogk54")
+TargetMonsterData = ExtResource("3_6hmbn")
+
+[node name="Node3D2" type="Node3D" parent="MobSpawners" parent_id_path=PackedInt32Array(554641987) index="1" unique_id=1713139753]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.0562477, 1.4843943, 0)
+script = ExtResource("2_ogk54")
+TargetMonsterData = ExtResource("3_6hmbn")
+
+[node name="Node3D3" type="Node3D" parent="MobSpawners" parent_id_path=PackedInt32Array(554641987) index="2" unique_id=186578254]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.608486, 1.8210392, 0)
+script = ExtResource("2_ogk54")
+TargetMonsterData = ExtResource("3_6hmbn")
+
+[node name="Node3D4" type="Node3D" parent="MobSpawners" parent_id_path=PackedInt32Array(554641987) index="3" unique_id=1084620977]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.482357, 3.5042653, 0)
+script = ExtResource("2_ogk54")
+TargetMonsterData = ExtResource("3_6hmbn")
+
+[node name="MinBound" type="Marker3D" parent="CamBounds" parent_id_path=PackedInt32Array(1934448944) index="0" unique_id=1673598433]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.939396, -24.03762, 0)
+
+[node name="MaxBound" type="Marker3D" parent="CamBounds" parent_id_path=PackedInt32Array(1934448944) index="1" unique_id=1950165414]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.098509, 23.925898, 0)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="7" unique_id=875615377]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 7, 0)

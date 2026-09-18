@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MobStatsData" format=3 uid="uid://btwt2ttn73gcb"]
+
+[ext_resource type="PackedScene" uid="uid://dh3rabyh47t3b" path="res://life/mob/Mob0.tscn" id="1_4dt2g"]
+[ext_resource type="Script" uid="uid://bnte87y05g05v" path="res://resources/MobStatsData.cs" id="1_q4hsp"]
+
+[resource]
+script = ExtResource("1_q4hsp")
+MonsterId = "Boo"
+MonsterName = "뚱땅보"
+MobScene = ExtResource("1_4dt2g")
+MaxHp = 8
+MaxMp = 8
+Defense = 0
+MoveSpeed = 1.0
+RewardExp = 3
+metadata/_custom_type_script = "uid://bnte87y05g05v"
