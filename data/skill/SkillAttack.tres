@@ -1,12 +1,14 @@
 [gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://bs4vmfw0v8v6"]
 
 [ext_resource type="Script" uid="uid://766c87qapfbh" path="res://resources/SkillData.cs" id="1_rtrd5"]
+[ext_resource type="Texture2D" uid="uid://2xyftqupr1b3" path="res://image/SkillIcon/SkillAttack.png" id="1_xrxv8"]
 
 [resource]
 script = ExtResource("1_rtrd5")
 SkillId = "attack"
 SkillName = "일반공격"
 Description = "전방으로 무기를 휘두른다"
+Icon = ExtResource("1_xrxv8")
 Type = 3
 MaxSkillLevel = 1
 metadata/_custom_type_script = "uid://766c87qapfbh"

@@ -15,6 +15,10 @@ run/main_scene="uid://dw72i24hj5mtw"
 config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+KeyboardManager="*uid://dyfhca5teb8b6"
+
 [display]
 
 window/stretch/mode="canvas_items"

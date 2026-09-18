@@ -13,6 +13,10 @@ public partial class Player : Life<PlayerStats>
 	private EquipManager _equipManager;
 	private bool _isAttacking = false;
 
+	// KeyboardManager 핫키 이벤트로 쪼인 입력을 물리 프레임까지 보관해둔다.
+	private bool _attackQueued = false;
+	private bool _jumpQueued = false;
+	private bool _pickUpQueued = false;
 
 	private readonly string[] _attackAnimations = { "Stab1", "Swing1", "Swing2", "Swing3" };
 
@@ -31,6 +35,32 @@ public partial class Player : Life<PlayerStats>
 
 		// Equip basic sword
 		_equipManager = GetNode<EquipManager>("EquipManager");
+
+		if (KeyboardManager.Instance != null)
+		{
+			KeyboardManager.Instance.OnSlotActivated += OnHotkeyActivated;
+		}
+	}
+
+	private void OnHotkeyActivated(HotkeySlot slot, SlotBinding binding)
+	{
+		if (binding.ContentType != SlotContentType.Skill)
+		{
+			return;
+		}
+
+		switch (binding.ContentId)
+		{
+			case "SkillAttack":
+				_attackQueued = true;
+				break;
+			case "SkillJump":
+				_jumpQueued = true;
+				break;
+			case "SkillPickUp":
+				_pickUpQueued = true;
+				break;
+		}
 	}
 
 	private void RefreshCurrentMap()
@@ -52,15 +82,26 @@ public partial class Player : Life<PlayerStats>
 		}
 
 		// Attack can be triggered while jumping, but not while already attacking.
-		if (Input.IsActionJustPressed("attack") && !_isAttacking)
+		bool attackRequested = _attackQueued;
+		_attackQueued = false;
+		if (attackRequested && !_isAttacking)
 		{
 			StartAttack();
+		}
+
+		bool pickUpRequested = _pickUpQueued;
+		_pickUpQueued = false;
+		if (pickUpRequested)
+		{
+			TryPickUp();
 		}
 
 		if (!_isAttacking)
 		{
 			// Handle Jump.
-			if (Input.IsActionJustPressed("jump") && IsOnFloor())
+			bool jumpRequested = _jumpQueued;
+			_jumpQueued = false;
+			if (jumpRequested && IsOnFloor())
 			{
 				velocity.Y = JumpVelocity;
 			}
@@ -97,6 +138,12 @@ public partial class Player : Life<PlayerStats>
 		_isAttacking = true;
 		string anim = _attackAnimations[GD.Randi() % (uint)_attackAnimations.Length];
 		_animationPlayer.Play(anim);
+	}
+
+	private void TryPickUp()
+	{
+		// TODO: hook up to an actual item pickup/interaction system once one exists.
+		GD.Print($"[{Name}] Pick up requested.");
 	}
 
 	private void UpdateLocomotionAnimation(float moveInput)

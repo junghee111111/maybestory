@@ -24,6 +24,14 @@ public partial class KeyboardManager : Node
         { HotkeySlot.E, Key.E },
     };
 
+    // 기본 슬롯 배치: A=공격, D=점프, F=줍기.
+    private static readonly Dictionary<HotkeySlot, SlotBinding> DefaultBindings = new()
+    {
+        { HotkeySlot.A, new SlotBinding(SlotContentType.Skill, "SkillAttack") },
+        { HotkeySlot.D, new SlotBinding(SlotContentType.Skill, "SkillJump") },
+        { HotkeySlot.F, new SlotBinding(SlotContentType.Skill, "SkillPickUp") },
+    };
+
     private const string ConfigPath = "user://keybinds.cfg";
 
     private readonly Dictionary<HotkeySlot, Key> _boundKeys = new();
@@ -43,7 +51,7 @@ public partial class KeyboardManager : Node
         foreach (HotkeySlot slot in AllSlots)
         {
             _boundKeys[slot] = DefaultKeys[slot];
-            _slotBindings[slot] = new SlotBinding();
+            _slotBindings[slot] = DefaultBindings.TryGetValue(slot, out var defaultBinding) ? defaultBinding : new SlotBinding();
             RegisterAction(slot, DefaultKeys[slot]);
         }
 
