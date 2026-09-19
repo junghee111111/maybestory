@@ -45,6 +45,24 @@ public partial class BaseMap : Node3D
 		return (Vector3.Zero, Vector3.Zero);
 	}
 
+	// 다음 맵으로 넘어올 때 같은 PortalId를 가진 포탈의 위치에 스폰시키기 위한 조회.
+	public Vector3 GetPortalPosition(string portalId)
+	{
+		Node portalsContainer = GetNodeOrNull("Portals");
+		if (portalsContainer != null)
+		{
+			foreach (Node child in portalsContainer.GetChildren())
+			{
+				if (child is Portal portal && portal.PortalId == portalId)
+				{
+					return portal.GlobalPosition;
+				}
+			}
+		}
+		GD.PrintErr($"Portal '{portalId}' not found in map '{MapId}'. Returning Vector3.Zero.");
+		return Vector3.Zero;
+	}
+
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{

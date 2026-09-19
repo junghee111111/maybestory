@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bdpbrf1dhgwxh"]
 
-[ext_resource type="Script" uid="uid://dwuv2cjbji22r" path="res://scripts/core/MainHudController.cs" id="1_wy6lw"]
+[ext_resource type="Script" uid="uid://dwuv2cjbji22r" path="res://scripts/ui/MainHudController.cs" id="1_wy6lw"]
+[ext_resource type="PackedScene" uid="uid://tsuxtu1d33nn" path="res://ui/hud/HotKeyGridItem.tscn" id="2_siyem"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_4kxuq"]
 font_size = 12
@@ -55,45 +56,6 @@ gradient = SubResource("Gradient_qki2p")
 width = 120
 height = 20
 fill_to = Vector2(0, 1)
-
-[sub_resource type="Gradient" id="Gradient_fkauo"]
-colors = PackedColorArray(1, 1, 1, 1, 0.68307775, 0.6830772, 0.68307686, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_4kxuq"]
-gradient = SubResource("Gradient_fkauo")
-width = 40
-height = 40
-fill_to = Vector2(0, 1)
-
-[sub_resource type="FontFile" id="FontFile_mm1bc"]
-subpixel_positioning = 0
-msdf_pixel_range = 14
-msdf_size = 128
-cache/0/variation_coordinates = {}
-cache/0/face_index = 0
-cache/0/embolden = 0.0
-cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
-cache/0/spacing_top = 0
-cache/0/spacing_bottom = 0
-cache/0/spacing_space = 0
-cache/0/spacing_glyph = 0
-cache/0/baseline_offset = 0.0
-cache/0/16/0/ascent = 0.0
-cache/0/16/0/descent = 0.0
-cache/0/16/0/underline_position = 0.0
-cache/0/16/0/underline_thickness = 0.0
-cache/0/16/0/scale = 1.0
-cache/0/12/0/ascent = 0.0
-cache/0/12/0/descent = 0.0
-cache/0/12/0/underline_position = 0.0
-cache/0/12/0/underline_thickness = 0.0
-cache/0/12/0/scale = 1.0
-
-[sub_resource type="LabelSettings" id="LabelSettings_mti6b"]
-font = SubResource("FontFile_mm1bc")
-font_size = 12
-outline_size = 2
-outline_color = Color(0, 0, 0, 1)
 
 [node name="MainHud" type="Control" unique_id=1516778780 node_paths=PackedStringArray("LevelLabel", "NameLabel", "JobLabel", "HpBar", "HpText", "MpBar", "MpText", "ExpBar", "ExpText")]
 layout_mode = 3
@@ -222,152 +184,61 @@ size_flags_vertical = 8
 [node name="VBoxContainer" type="VBoxContainer" parent="UILayer/StatusPanel2" unique_id=1419141400]
 layout_mode = 2
 
-[node name="GridContainer" type="GridContainer" parent="UILayer/StatusPanel2/VBoxContainer" unique_id=1142189593]
+[node name="Grid-1234" type="GridContainer" parent="UILayer/StatusPanel2/VBoxContainer" unique_id=1871794690]
 layout_mode = 2
 columns = 4
 
-[node name="TextureRect" type="TextureRect" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer" unique_id=762217867]
+[node name="KeyNum1" parent="UILayer/StatusPanel2/VBoxContainer/Grid-1234" unique_id=754732485 instance=ExtResource("2_siyem")]
 layout_mode = 2
-texture = SubResource("GradientTexture2D_4kxuq")
+Key = "Num1"
 
-[node name="Label" type="Label" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer/TextureRect" unique_id=2098225202]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "1"
-label_settings = SubResource("LabelSettings_mti6b")
-
-[node name="TextureRect2" type="TextureRect" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer" unique_id=391276066]
+[node name="KeyNum2" parent="UILayer/StatusPanel2/VBoxContainer/Grid-1234" unique_id=1034384290 instance=ExtResource("2_siyem")]
 layout_mode = 2
-texture = SubResource("GradientTexture2D_4kxuq")
+Key = "Num2"
 
-[node name="Label" type="Label" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer/TextureRect2" unique_id=712694877]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "2"
-label_settings = SubResource("LabelSettings_mti6b")
-
-[node name="TextureRect3" type="TextureRect" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer" unique_id=2003234560]
+[node name="KeyNum3" parent="UILayer/StatusPanel2/VBoxContainer/Grid-1234" unique_id=28415134 instance=ExtResource("2_siyem")]
 layout_mode = 2
-texture = SubResource("GradientTexture2D_4kxuq")
+Key = "Num3"
 
-[node name="Label" type="Label" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer/TextureRect3" unique_id=918439298]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "3"
-label_settings = SubResource("LabelSettings_mti6b")
-
-[node name="TextureRect4" type="TextureRect" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer" unique_id=1611553389]
+[node name="KeyNum4" parent="UILayer/StatusPanel2/VBoxContainer/Grid-1234" unique_id=2074096388 instance=ExtResource("2_siyem")]
 layout_mode = 2
-texture = SubResource("GradientTexture2D_4kxuq")
+Key = "Num4"
 
-[node name="Label" type="Label" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer/TextureRect4" unique_id=1815539707]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "4"
-label_settings = SubResource("LabelSettings_mti6b")
-
-[node name="GridContainer2" type="GridContainer" parent="UILayer/StatusPanel2/VBoxContainer" unique_id=1970913091]
+[node name="Grid-QWER" type="GridContainer" parent="UILayer/StatusPanel2/VBoxContainer" unique_id=1631215636]
 layout_mode = 2
 columns = 4
 
-[node name="TextureRect" type="TextureRect" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer2" unique_id=353660801]
+[node name="KeyQ" parent="UILayer/StatusPanel2/VBoxContainer/Grid-QWER" unique_id=380873637 instance=ExtResource("2_siyem")]
 layout_mode = 2
-texture = SubResource("GradientTexture2D_4kxuq")
+Key = "Q"
 
-[node name="Label" type="Label" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer2/TextureRect" unique_id=1713007971]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "Q"
-label_settings = SubResource("LabelSettings_mti6b")
-
-[node name="TextureRect2" type="TextureRect" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer2" unique_id=1027554768]
+[node name="KeyW" parent="UILayer/StatusPanel2/VBoxContainer/Grid-QWER" unique_id=1157294673 instance=ExtResource("2_siyem")]
 layout_mode = 2
-texture = SubResource("GradientTexture2D_4kxuq")
+Key = "W"
 
-[node name="Label" type="Label" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer2/TextureRect2" unique_id=72874201]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "W"
-label_settings = SubResource("LabelSettings_mti6b")
-
-[node name="TextureRect3" type="TextureRect" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer2" unique_id=1525437849]
+[node name="KeyE" parent="UILayer/StatusPanel2/VBoxContainer/Grid-QWER" unique_id=459909995 instance=ExtResource("2_siyem")]
 layout_mode = 2
-texture = SubResource("GradientTexture2D_4kxuq")
+Key = "E"
 
-[node name="Label" type="Label" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer2/TextureRect3" unique_id=2073856900]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "E"
-label_settings = SubResource("LabelSettings_mti6b")
-
-[node name="TextureRect4" type="TextureRect" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer2" unique_id=1617893155]
+[node name="KeyR" parent="UILayer/StatusPanel2/VBoxContainer/Grid-QWER" unique_id=1129644795 instance=ExtResource("2_siyem")]
 layout_mode = 2
-texture = SubResource("GradientTexture2D_4kxuq")
-
-[node name="Label" type="Label" parent="UILayer/StatusPanel2/VBoxContainer/GridContainer2/TextureRect4" unique_id=1441071928]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "R"
-label_settings = SubResource("LabelSettings_mti6b")
+Key = "R"
 
 [node name="Grid-ASDF" type="GridContainer" parent="UILayer/StatusPanel2/VBoxContainer" unique_id=510251179]
 layout_mode = 2
 columns = 4
 
-[node name="KeyA" type="TextureRect" parent="UILayer/StatusPanel2/VBoxContainer/Grid-ASDF" unique_id=454146389]
+[node name="KeyA" parent="UILayer/StatusPanel2/VBoxContainer/Grid-ASDF" unique_id=977478366 instance=ExtResource("2_siyem")]
 layout_mode = 2
-texture = SubResource("GradientTexture2D_4kxuq")
 
-[node name="KeyATex" type="TextureRect" parent="UILayer/StatusPanel2/VBoxContainer/Grid-ASDF/KeyA" unique_id=533876342]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-expand_mode = 2
-
-[node name="KeyALabel" type="Label" parent="UILayer/StatusPanel2/VBoxContainer/Grid-ASDF/KeyA" unique_id=785105678]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "A"
-label_settings = SubResource("LabelSettings_mti6b")
-
-[node name="TextureRect2" type="TextureRect" parent="UILayer/StatusPanel2/VBoxContainer/Grid-ASDF" unique_id=1168811385]
+[node name="KeyS" parent="UILayer/StatusPanel2/VBoxContainer/Grid-ASDF" unique_id=2051260654 instance=ExtResource("2_siyem")]
 layout_mode = 2
-texture = SubResource("GradientTexture2D_4kxuq")
+Key = "S"
 
-[node name="Label" type="Label" parent="UILayer/StatusPanel2/VBoxContainer/Grid-ASDF/TextureRect2" unique_id=1648980746]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "S"
-label_settings = SubResource("LabelSettings_mti6b")
-
-[node name="TextureRect3" type="TextureRect" parent="UILayer/StatusPanel2/VBoxContainer/Grid-ASDF" unique_id=371641166]
+[node name="KeyD" parent="UILayer/StatusPanel2/VBoxContainer/Grid-ASDF" unique_id=1471703413 instance=ExtResource("2_siyem")]
 layout_mode = 2
-texture = SubResource("GradientTexture2D_4kxuq")
+Key = "D"
 
-[node name="Label" type="Label" parent="UILayer/StatusPanel2/VBoxContainer/Grid-ASDF/TextureRect3" unique_id=946341408]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "D"
-label_settings = SubResource("LabelSettings_mti6b")
-
-[node name="TextureRect4" type="TextureRect" parent="UILayer/StatusPanel2/VBoxContainer/Grid-ASDF" unique_id=1893437675]
+[node name="KeyF" parent="UILayer/StatusPanel2/VBoxContainer/Grid-ASDF" unique_id=1377379833 instance=ExtResource("2_siyem")]
 layout_mode = 2
-texture = SubResource("GradientTexture2D_4kxuq")
-
-[node name="Label" type="Label" parent="UILayer/StatusPanel2/VBoxContainer/Grid-ASDF/TextureRect4" unique_id=163451685]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "F"
-label_settings = SubResource("LabelSettings_mti6b")
+Key = "F"

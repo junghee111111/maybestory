@@ -24,6 +24,7 @@ public partial class LifeStats : Node
     [Export] public int Int = 4;
     [Export] public int Luk = 4;
     [Export] public int Defense = 10;
+    [Export] public int AttackPower = 10;
 
     public override void _Ready()
     {
@@ -31,7 +32,8 @@ public partial class LifeStats : Node
         CurrentMp = MaxMp;
     }
 
-    public virtual void TakeDamage(int damage)
+    // 방어력 적용 후 실제로 깎인 대미지를 반환한다 (UI 표시용).
+    public virtual int TakeDamage(int damage)
     {
         int actualDamage = Mathf.Max(1, damage - Defense);
         CurrentHp = Mathf.Max(0, CurrentHp - actualDamage);
@@ -42,9 +44,30 @@ public partial class LifeStats : Node
         {
             OnDied?.Invoke();
         }
+
+        return actualDamage;
     }
 
-    public virtual void HealHp(int amount)
+    public virtual void ConsumeMp(int amount)
+    {
+        CurrentMp = Mathf.Max(0, CurrentMp - amount);
+        OnStatsChanged?.Invoke();
+    }
+
+
+    public virtual void ConsumeHp(int amount)
+    {
+        CurrentHp = Mathf.Max(0, CurrentHp - amount);
+        OnHpChanged?.Invoke();
+    }
+
+    public virtual void RestoreMp(int amount)
+    {
+        CurrentMp = Mathf.Min(MaxMp, CurrentMp + amount);
+        OnStatsChanged?.Invoke();
+    }
+
+    public virtual void RestoreHp(int amount)
     {
         CurrentHp = Mathf.Min(MaxHp, CurrentHp + amount);
         OnHpChanged?.Invoke();

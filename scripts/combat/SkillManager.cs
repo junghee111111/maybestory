@@ -4,27 +4,46 @@ using System.Collections.Generic;
 
 public partial class SkillManager : Node
 {
+    public static SkillManager Instance { get; private set; }
+
+    private const float CriticalMultiplier = 1.5f;
+    private const float HeadshotMultiplier = 1.5f;
+
     [Export] public Godot.Collections.Array<SkillData> AllSkills = new(); // 에디터에서 .tres 등록
 
     private readonly Dictionary<string, SkillData> _skillDataDict = new();
-    private readonly Dictionary<string, int> _allocatedPoints = new(); // SkillId -> Level
+    private readonly Dictionary<string, int> _allocatedPoints = new();
     private readonly Dictionary<string, float> _activeBuffTimers = new(); // SkillId -> 남은 시간
 
     private Player _player;
     private PlayerStats _stats;
     private AnimationPlayer _animPlayer;
+    private EquipManager _equipManager;
 
     public override void _Ready()
     {
+        Instance = this;
+
         _player = GetOwner<Player>();
         _stats = _player.GetNode<PlayerStats>("PlayerStats");
         _animPlayer = _player.GetNode<AnimationPlayer>("BaseChar/AnimationPlayer");
+        _equipManager = _player.GetNode<EquipManager>("EquipManager");
 
         foreach (var data in AllSkills)
         {
             _skillDataDict[data.SkillId] = data;
             _allocatedPoints[data.SkillId] = 0; // 초기 스킬 레벨 0
         }
+
+        // 기본 기능은 allocatedPoints 1로 설정
+        _allocatedPoints["SkillAttack"] = 1;
+        _allocatedPoints["SkillJump"] = 1;
+        _allocatedPoints["SkillPickUp"] = 1;
+    }
+
+    public SkillData GetSkillData(string skillId)
+    {
+        return _skillDataDict.TryGetValue(skillId, out var data) ? data : null;
     }
 
     public override void _PhysicsProcess(double delta)
@@ -82,12 +101,24 @@ public partial class SkillManager : Node
             GD.Print("[Skill] MP가 부족합니다.");
             return false;
         }
-        _stats.CurrentMp -= mpCost;
 
-        // 캐스팅 모션 재생
-        if (!string.IsNullOrEmpty(skill.CastAnimationName) && _animPlayer.HasAnimation(skill.CastAnimationName))
+        // HP 체크 및 소모
+        int hpCost = skill.GetHpCost(level);
+        if (_stats.CurrentHp < hpCost)
         {
-            _animPlayer.Play(skill.CastAnimationName, 0.1f);
+            GD.Print("[Skill] HP가 부족합니다.");
+            return false;
+        }
+
+        _stats.ConsumeMp(mpCost);
+        _stats.ConsumeHp(hpCost);
+
+        // 캐스팅 모션 랜덤하게 재생.
+        string castAnim = skill.CastAnimationName.Length > 0 ? skill.CastAnimationName[GD.Randi() % skill.CastAnimationName.Length] : "";
+        if (!string.IsNullOrEmpty(castAnim) && _animPlayer.HasAnimation(castAnim))
+        {
+            _animPlayer.Play(castAnim, 0.1f);
+            _player.StartAttack();
         }
 
         // 스킬 타입별 분기 실행
@@ -142,48 +173,136 @@ public partial class SkillManager : Node
         projInstance.GlobalPosition = spawnPos;
 
         // 투사체 초기화 (방향, 속도, 대미지)
-        int calculatedDmg = Mathf.RoundToInt((_stats.Int * 4 + _stats.Luk) * skill.GetDamageMultiplier(level));
+        (int calculatedDmg, bool isCritical) = CalculateDamage(skill, level);
         if (projInstance is Projectile proj)
         {
-            proj.Initialize(new Vector3(facingDir, 0, 0), skill.ProjectileSpeed, calculatedDmg);
+            proj.Initialize(new Vector3(facingDir, 0, 0), skill.ProjectileSpeed, calculatedDmg, isCritical);
         }
     }
 
-    // 4. 자동 타게팅형 공격 (범위 내 몬스터 검색 및 VFX 생성)
-    private void ExecuteAutoTarget(SkillData skill, int level)
+    // 대미지/크리티컬 계산 (Luk 기반 크리 확률, 헤드샷 배율 적용)
+    private (int Damage, bool IsCritical) CalculateDamage(SkillData skill, int level, bool isHeadshot = false)
     {
-        // "Monsters" 그룹에서 사거리 내 가장 가까운 적 검색
-        var monsters = GetTree().GetNodesInGroup("Mob");
-        Node3D closestMonster = null;
-        float minDist = skill.AttackRange;
-
-        foreach (Node node in monsters)
+        float damage = (_stats.Int + _stats.Luk / 2) * skill.GetDamageMultiplier(level);
+        if (skill.SkillId == "SkillAttack")
         {
-            if (node is Node3D m)
+            damage = _stats.Str * skill.GetDamageMultiplier(level);
+        }
+
+
+        float critChance = Mathf.Clamp(_stats.Luk * 0.005f, 0f, 0.5f);
+        bool isCritical = GD.Randf() < critChance;
+
+        if (isCritical) damage *= CriticalMultiplier;
+        if (isHeadshot) damage *= HeadshotMultiplier;
+
+        return (Mathf.RoundToInt(damage), isCritical);
+    }
+
+    private async void ExecuteAutoTarget(SkillData skill, int level)
+    {
+        if (skill.PreDelay > 0f)
+        {
+            await ToSignal(GetTree().CreateTimer(skill.PreDelay), SceneTreeTimer.SignalName.Timeout);
+        }
+
+        List<(Mob Mob, bool IsHeadshot)> targets = skill.UseAttackRangeBasedOnWeaponMesh
+            ? FindTargetsInWeaponHitbox(skill)
+            : FindTargetsInVirtualHitbox(skill);
+
+        foreach ((Mob target, bool isHeadshot) in targets)
+        {
+            (int dmg, bool isCritical) = CalculateDamage(skill, level, isHeadshot);
+
+            if (skill.HitVfxScene != null)
             {
-                float dist = _player.GlobalPosition.DistanceTo(m.GlobalPosition);
-                if (dist <= minDist)
-                {
-                    minDist = dist;
-                    closestMonster = m;
-                }
+                var vfx = skill.HitVfxScene.Instantiate<Node3D>();
+                GetTree().CurrentScene.AddChild(vfx);
+                // 몬스터 위치 + 상대 오프셋에 생성
+                vfx.GlobalPosition = target.GlobalPosition + skill.HitVfxTargetOffset;
+            }
+
+            target.TakeDamage(dmg, _player.GlobalPosition, isCritical, isHeadshot ? "Headshot" : "");
+        }
+    }
+
+    // 무기(Weapon/Area3D/HitArea)와 겹쳐진 몬스터의 하트박스(Area3D)로부터 대상과 헤드샷 여부를 찾는다.
+    private List<(Mob Mob, bool IsHeadshot)> FindTargetsInWeaponHitbox(SkillData skill)
+    {
+        var found = new Dictionary<Mob, bool>();
+
+        Area3D hitArea = _equipManager?.WeaponHitArea;
+        if (hitArea == null) return new List<(Mob, bool)>();
+
+        foreach (Area3D area in hitArea.GetOverlappingAreas())
+        {
+            if (area.GetParent() is not Mob mob) continue;
+            found[mob] = false;
+        }
+
+        var targets = new List<(Mob, bool)>();
+        foreach (var kvp in found)
+        {
+            if (targets.Count >= skill.TargetCount) break;
+            targets.Add((kvp.Key, kvp.Value));
+        }
+        return targets;
+    }
+
+    // AttackRangeW/H/D 크기의 가상 박스(플레이어 위치 + AttackRangeOffset)로 겹치는 대상과 헤드샷 여부를 찾는다.
+    private List<(Mob Mob, bool IsHeadshot)> FindTargetsInVirtualHitbox(SkillData skill)
+    {
+        var targets = new List<(Mob, bool)>();
+
+        Vector3 center = _player.GlobalPosition + skill.AttackRangeOffset;
+        var size = new Vector3(skill.AttackRangeW, skill.AttackRangeH, skill.AttackRangeD);
+        var spaceState = _player.GetWorld3D().DirectSpaceState;
+
+        var bodyQuery = new PhysicsShapeQueryParameters3D
+        {
+            Shape = new BoxShape3D { Size = size },
+            Transform = new Transform3D(Basis.Identity, center),
+            CollisionMask = 5,
+        };
+
+        var mobs = new List<Mob>();
+        foreach (var hit in spaceState.IntersectShape(bodyQuery))
+        {
+            if (mobs.Count >= skill.TargetCount) break;
+            if (hit["collider"].As<Node>() is Mob mob && !mobs.Contains(mob))
+            {
+                mobs.Add(mob);
             }
         }
 
-        if (closestMonster != null && skill.HitVfxScene != null)
-        {
-            var vfx = skill.HitVfxScene.Instantiate<Node3D>();
-            GetTree().CurrentScene.AddChild(vfx);
-            // 몬스터 위치 + 상대 오프셋에 생성
-            vfx.GlobalPosition = closestMonster.GlobalPosition + skill.TargetOffset;
+        if (mobs.Count == 0) return targets;
 
-            int dmg = Mathf.RoundToInt((_stats.Int * 4 + _stats.Luk) * skill.GetDamageMultiplier(level));
-            if (closestMonster.HasMethod("TakeDamage"))
+        // 2) 하트박스(레이어 16)로 헤드샷 여부만 별도로 판정
+        var areaQuery = new PhysicsShapeQueryParameters3D
+        {
+            Shape = new BoxShape3D { Size = size },
+            Transform = new Transform3D(Basis.Identity, center),
+            CollisionMask = 16,
+            CollideWithBodies = false,
+            CollideWithAreas = true,
+        };
+
+        var overlappedAreas = new HashSet<Area3D>();
+        foreach (var hit in spaceState.IntersectShape(areaQuery))
+        {
+            if (hit["collider"].As<Node>() is Area3D area)
             {
-                closestMonster.Call("TakeDamage", dmg);
+                overlappedAreas.Add(area);
             }
-            GD.Print($"[Target Attack] {closestMonster.Name}에게 {dmg} 대미지 적용");
         }
+
+        foreach (Mob mob in mobs)
+        {
+            //bool isHeadshot = mob.HeadHurtbox != null && overlappedAreas.Contains(mob.HeadHurtbox);
+            //targets.Add((mob, isHeadshot));
+        }
+
+        return targets;
     }
 
     // 5. 소환수형

@@ -10,7 +10,9 @@ public partial class KeyboardManager : Node
 
     private static readonly HotkeySlot[] AllSlots =
     {
-        HotkeySlot.A, HotkeySlot.S, HotkeySlot.D, HotkeySlot.F, HotkeySlot.Q, HotkeySlot.W, HotkeySlot.E
+        HotkeySlot.A, HotkeySlot.S, HotkeySlot.D, HotkeySlot.F,
+        HotkeySlot.Q, HotkeySlot.W, HotkeySlot.E, HotkeySlot.R,
+        HotkeySlot.Num1, HotkeySlot.Num2, HotkeySlot.Num3, HotkeySlot.Num4,
     };
 
     private static readonly Dictionary<HotkeySlot, Key> DefaultKeys = new()
@@ -22,6 +24,11 @@ public partial class KeyboardManager : Node
         { HotkeySlot.Q, Key.Q },
         { HotkeySlot.W, Key.W },
         { HotkeySlot.E, Key.E },
+        { HotkeySlot.R, Key.R },
+        { HotkeySlot.Num1, Key.Key1 },
+        { HotkeySlot.Num2, Key.Key2 },
+        { HotkeySlot.Num3, Key.Key3 },
+        { HotkeySlot.Num4, Key.Key4 },
     };
 
     // 기본 슬롯 배치: A=공격, D=점프, F=줍기.
@@ -140,6 +147,7 @@ public partial class KeyboardManager : Node
         }
 
         InputMap.ActionAddEvent(action, new InputEventKey { PhysicalKeycode = key });
+        GD.Print($"Registered action '{action}' with key '{key}'");
     }
 
     // ==========================================

@@ -5,7 +5,12 @@
 [ext_resource type="Resource" uid="uid://cxomhwywfxone" path="res://data/weapon/sword.tres" id="2_ohdos"]
 [ext_resource type="Script" uid="uid://jrn604hsdxto" path="res://scripts/life/PlayerStats.cs" id="3_wcxrr"]
 [ext_resource type="Script" uid="uid://cx6ueb7i6r450" path="res://scripts/combat/SkillManager.cs" id="4_wcxrr"]
+[ext_resource type="Script" uid="uid://766c87qapfbh" path="res://resources/SkillData.cs" id="5_4ljo2"]
 [ext_resource type="Script" uid="uid://c6gewcbhan3tn" path="res://scripts/life/equip/EquipManager.cs" id="5_y0e6w"]
+[ext_resource type="Resource" uid="uid://ch4f7de62v0gv" path="res://data/skill/SkillHeal.tres" id="6_de513"]
+[ext_resource type="Resource" uid="uid://bs4vmfw0v8v6" path="res://data/skill/SkillPickUp.tres" id="7_licno"]
+[ext_resource type="Resource" uid="uid://dnl3c528nctox" path="res://data/skill/SkillJump.tres" id="8_xecav"]
+[ext_resource type="Resource" uid="uid://bcbmk4dvbhfp8" path="res://data/skill/SkillAttack.tres" id="9_fx87q"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4kxuq"]
 radius = 0.72216797
@@ -23,12 +28,21 @@ StatsPath = NodePath("PlayerStats")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8026667, 0)
 shape = SubResource("CapsuleShape3D_4kxuq")
 
+[node name="MobHitboxDetector" type="Area3D" parent="." unique_id=-892695316]
+collision_layer = 0
+collision_mask = 16
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MobHitboxDetector" unique_id=-892695315]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8026667, 0)
+shape = SubResource("CapsuleShape3D_4kxuq")
+
 [node name="PlayerStats" type="Node" parent="." unique_id=1322320637]
 script = ExtResource("3_wcxrr")
 metadata/_custom_type_script = "uid://d0a08qmo1ct75"
 
 [node name="SkillManager" type="Node" parent="." unique_id=51193720]
 script = ExtResource("4_wcxrr")
+AllSkills = Array[ExtResource("5_4ljo2")]([ExtResource("6_de513"), ExtResource("7_licno"), ExtResource("8_xecav"), ExtResource("9_fx87q")])
 
 [node name="EquipManager" type="Node" parent="." unique_id=2082028464]
 script = ExtResource("5_y0e6w")

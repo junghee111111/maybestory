@@ -53,7 +53,6 @@ public partial class MobSpawner : Node3D
         // 스포너 위치 기준으로 X축만 약간 분산시켜 스폰
         float offsetX = (float)GD.RandRange(-SpawnRadiusX, SpawnRadiusX);
         Vector3 spawnPos = GlobalPosition + new Vector3(offsetX, 0, 0);
-        spawnPos.Z = 0.0f; // Z축 고정
 
         mobInstance.GlobalPosition = spawnPos;
     }

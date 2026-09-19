@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Godot;
 
 public enum SkillType
@@ -22,27 +23,35 @@ public partial class SkillData : Resource
     [Export] public int MaxSkillLevel = 30;
 
     [ExportGroup("2. 소모값 및 쿨타임")]
+
+    [Export] public int BaseHpCost = 12;
+    [Export] public int HpCostPerLevel = 1;
     [Export] public int BaseMpCost = 12;
     [Export] public int MpCostPerLevel = 1;
     [Export] public float Cooldown = 0.0f;
-    [Export] public string CastAnimationName = "Swing1"; // 발동 시 재생할 캐릭터 애니메이션
+    [Export] public float PreDelay = 0.0f;
+    [Export] public string[] CastAnimationName = ["Swing1", "Swing2", "Swing3", "Stab1"]; // 발동 시 재생할 캐릭터 애니메이션
 
     [ExportGroup("3. 공격 스킬 공통 계수")]
     [Export] public float BaseDamageMultiplier = 1.2f;    // 1레벨 대미지 계수 (마법 공격력 대비)
     [Export] public float DamageMultiplierPerLevel = 0.04f; // 레벨당 계수 증가폭
     [Export] public int TargetCount = 1;                   // 타격 가능한 몬스터 수
-    [Export] public float AttackRange = 15.0f;
+    [Export] public bool UseAttackRangeBasedOnWeaponMesh = true;
+    [Export] public float AttackRangeW = 15.0f;
+    [Export] public float AttackRangeH = 10.0f;
+    [Export] public float AttackRangeD = 5.0f;
+    [Export] public Vector3 AttackRangeOffset = new(0, 0, 0);
 
     [ExportGroup("4. 투사체 설정 (ActiveProjectile)")]
     [Export] public PackedScene ProjectileScene;          // 발사될 투사체 프리팹 (.tscn)
     [Export] public float ProjectileSpeed = 20.0f;
 
-    [ExportGroup("5. 타게팅/VFX 설정 (ActiveAutoTarget)")]
+    [ExportGroup("5. VFX 설정")]
     [Export] public PackedScene PreEffectScene;
-    [Export] public PackedScene HitVfxScene;              // 몬스터 위치에 스폰될 이펙트 프리팹 (.tscn)
-    [Export] public Vector3 TargetOffset = new Vector3(0, 1.0f, 0); // 타게팅 중심점 보정치
+    [Export] public PackedScene HitVfxScene;
+    [Export] public Vector3 HitVfxTargetOffset = new Vector3(0, 0, 0); // 타게팅 중심점 보정치
 
-    [ExportGroup("6. 버프/소환수 설정 (ActiveBuff / ActiveSummon)")]
+    [ExportGroup("6. 버프/소환수 설정")]
     [Export] public float BaseDuration = 60.0f;           // 지속시간 (초)
     [Export] public float DurationPerLevel = 5.0f;
     [Export] public int BuffStatValue = 20;               // 버프 수치 (예: 방어력/마력 증가량)
@@ -56,6 +65,9 @@ public partial class SkillData : Resource
     // =========================================================================
     public int GetMpCost(int level)
         => BaseMpCost + (MpCostPerLevel * Mathf.Max(0, level - 1));
+
+    public int GetHpCost(int level)
+        => BaseHpCost + (HpCostPerLevel * Mathf.Max(0, level - 1));
 
     public float GetDamageMultiplier(int level)
         => BaseDamageMultiplier + (DamageMultiplierPerLevel * Mathf.Max(0, level - 1));

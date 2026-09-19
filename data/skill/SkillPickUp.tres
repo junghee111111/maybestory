@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://bs4vmfw0v8v6"]
+
+[ext_resource type="Script" uid="uid://766c87qapfbh" path="res://resources/SkillData.cs" id="1_rtrd5"]
+[ext_resource type="Texture2D" uid="uid://hl8w41k0t8ia" path="res://demo/assets/textures/ProtGrid0.jpg" id="1_xrxv8"]
+
+[resource]
+script = ExtResource("1_rtrd5")
+SkillId = "SkillPickUp"
+SkillName = "줍기"
+Description = "아이템을 줍는다."
+Icon = ExtResource("1_xrxv8")
+Type = 3
+MaxSkillLevel = 1
+metadata/_custom_type_script = "uid://766c87qapfbh"

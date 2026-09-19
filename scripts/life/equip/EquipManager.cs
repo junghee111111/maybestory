@@ -21,6 +21,9 @@ public partial class EquipManager : Node
 
 	private readonly Dictionary<EquipSlot, ItemData> _equipped = new();
 
+	// Weapon visual's hitbox (Area3D/HitArea), null if no weapon is equipped or it lacks one.
+	public Area3D WeaponHitArea => (_weaponVisual as Node3D)?.GetNodeOrNull<Area3D>("Area3D");
+
 	public override void _Ready()
 	{
 		_player = GetOwner<Player>();

@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/core/Teleporter.cs" id="1_teleporter"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_teleporter"]
+size = Vector3(2, 3, 2)
+
+[node name="Teleporter" type="Area3D"]
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_teleporter")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_teleporter")

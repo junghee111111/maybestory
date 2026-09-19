@@ -28,8 +28,9 @@ public partial class CameraController : Node3D
 		// clamp position
 		float clampedX = Mathf.Clamp(targetPos.X, _minBounds.X, _maxBounds.X);
 		float clampedY = Mathf.Clamp(targetPos.Y + RelativeYPos, _minBounds.Y, _maxBounds.Y);
+		float desiredZ = targetPos.Z + _targetDistance;
 
-		Vector3 desiredPos = new Vector3(clampedX, clampedY, _targetDistance);
+		Vector3 desiredPos = new Vector3(clampedX, clampedY, desiredZ);
 		GlobalPosition = GlobalPosition.Lerp(desiredPos, FollowSpeed * dt);
 	}
 
@@ -58,7 +59,7 @@ public partial class CameraController : Node3D
 		if (_target == null) return;
 		float clampedX = Mathf.Clamp(_target.GlobalPosition.X, _minBounds.X, _maxBounds.X);
 		float clampedY = Mathf.Clamp(_target.GlobalPosition.Y, _minBounds.Y, _maxBounds.Y);
-		GlobalPosition = new Vector3(clampedX, clampedY, _targetDistance);
+		GlobalPosition = new Vector3(clampedX, clampedY, _target.GlobalPosition.Z + _targetDistance);
 	}
 
 }

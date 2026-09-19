@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://dnl3c528nctox"]
+
+[ext_resource type="Texture2D" uid="uid://hl8w41k0t8ia" path="res://demo/assets/textures/ProtGrid0.jpg" id="1_b5xup"]
+[ext_resource type="Script" uid="uid://766c87qapfbh" path="res://resources/SkillData.cs" id="2_lve82"]
+
+[resource]
+script = ExtResource("2_lve82")
+SkillId = "SkillJump"
+SkillName = "점프"
+Description = "점프한다."
+Icon = ExtResource("1_b5xup")
+Type = 3
+MaxSkillLevel = 1
+metadata/_custom_type_script = "uid://766c87qapfbh"

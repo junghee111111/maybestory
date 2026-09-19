@@ -10,17 +10,25 @@ public abstract partial class Mob : Life<MobStats>
 
     private AnimationPlayer _animPlayer;
     private Node3D _visualModel;
-    // AI 순찰용 변수
+    private CollisionShape3D _MobVolumeCollision;
+    private Area3D _MobHurtboxArea;
     private float _direction = 1.0f; // 1 = 우측, -1 = 좌측
     private float _stateTimer = 0.0f;
 
     public event Action OnDeathToSpawner;
+
+    protected Mob()
+    {
+        IsAttackable = true;
+    }
 
     public override void _Ready()
     {
         base._Ready();
         _visualModel = GetNode<Node3D>(VisualModelPath);
         _animPlayer = GetNode<AnimationPlayer>(AnimationPlayerPath);
+        _MobVolumeCollision = GetNode<CollisionShape3D>("CollisionShape3D");
+        _MobHurtboxArea = GetNode<Area3D>("Area3D");
 
         if (MobData != null && Stats != null)
         {
@@ -29,6 +37,7 @@ public abstract partial class Mob : Life<MobStats>
             Stats.MaxMp = MobData.MaxMp;
             Stats.CurrentMp = MobData.MaxMp;
             Stats.Defense = MobData.Defense;
+            Stats.AttackPower = MobData.AttackPower;
 
             Speed = MobData.MoveSpeed;
             JumpVelocity = MobData.JumpVelocity;
@@ -49,6 +58,15 @@ public abstract partial class Mob : Life<MobStats>
         MobData = data;
     }
 
+    public override void TakeDamage(int damage, Vector3 hitSourcePosition, bool isCritical = false, string subText = "")
+    {
+        base.TakeDamage(damage, hitSourcePosition, isCritical, subText);
+
+        if (IsDead) return;
+
+        PlayAnim("Hit", 0.1f);
+    }
+
     public override void _PhysicsProcess(double delta)
     {
         if (IsDead) return;
@@ -62,7 +80,7 @@ public abstract partial class Mob : Life<MobStats>
             vel.Y -= 20.0f * dt;
         }
 
-        if (!IsStunned)
+        if (!IsStunned && !IsBusy)
         {
             // 메이플 특유의 배회 AI: 걷다가 서서 두리번거리기를 반복
             _stateTimer -= dt;
@@ -97,7 +115,7 @@ public abstract partial class Mob : Life<MobStats>
 
         // 횡스크롤 Z축 고정
         Vector3 pos = GlobalPosition;
-        pos.Z = 0.0f;
+        pos.Z = GlobalPosition.Z;
         GlobalPosition = pos;
     }
 
@@ -109,12 +127,20 @@ public abstract partial class Mob : Life<MobStats>
         }
     }
 
-    public override void OnDeath()
+    public override async void OnDeath()
     {
         // 1. 경험치 및 메소 드랍
         DropRewards();
         // 2. 사망 애니메이션 후 소멸
+        PlayAnim("Die", 0.1f);
+        IsDead = true;
+        // Area3D disable
+        _MobHurtboxArea.SetDeferred("monitoring", false);
+
         OnDeathToSpawner?.Invoke();
+
+        // waiting for play anim die
+        await ToSignal(_animPlayer, "animation_finished");
         QueueFree();
     }
 

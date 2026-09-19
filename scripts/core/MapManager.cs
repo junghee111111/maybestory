@@ -3,9 +3,12 @@ using System;
 
 public partial class MapManager : Node
 {
+	public static MapManager Instance { get; private set; }
+
 	[Export] public NodePath MapContainerPath = "../MapContainer";
 	[Export] public NodePath PlayerPath = "../LifeContainer/Player";
 	[Export] public NodePath CameraControllerPath = "../CameraController";
+	[Export] public PackedScene StartingMap;
 
 	private Node3D _mapContainer;
 	private Player _player;
@@ -14,15 +17,25 @@ public partial class MapManager : Node
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		Instance = this;
+
 		_mapContainer = GetNode<Node3D>(MapContainerPath);
 		_player = GetNode<Player>(PlayerPath);
 		_cameraController = GetNode<CameraController>(CameraControllerPath);
 
-		ChangeMap("res://map/Map0.tscn");
+		PackedScene startingMap = StartingMap ?? GD.Load<PackedScene>("res://map/Map0.tscn");
+		ChangeMap(startingMap);
 	}
 
-	public void ChangeMap(string mapScenePath, string spawnPointName = "Default")
+	// spawnAtPortal이 true면 spawnPointName을 새 맵의 Portals 컨테이너에서 PortalId로 찾아 스폰한다.
+	public void ChangeMap(PackedScene mapScene, string spawnPointName = "Default", bool spawnAtPortal = false)
 	{
+		if (mapScene == null)
+		{
+			GD.PrintErr("[MapManager] mapScene is null.");
+			return;
+		}
+
 		// Remove the current map instance if it exists
 		if (_currentMapInstance != null)
 		{
@@ -30,16 +43,13 @@ public partial class MapManager : Node
 			_currentMapInstance = null;
 		}
 
-		var mapScene = GD.Load<PackedScene>(mapScenePath);
-		if (mapScene == null)
-		{
-			GD.PrintErr($"Failed to load map scene: {mapScenePath}");
-			return;
-		}
-
 		_currentMapInstance = mapScene.Instantiate<BaseMap>();
 		_mapContainer.AddChild(_currentMapInstance);
-		Vector3 spawnPos = _currentMapInstance.GetSpawnPosition(spawnPointName);
+
+		Vector3 spawnPos = spawnAtPortal
+			? _currentMapInstance.GetPortalPosition(spawnPointName)
+			: _currentMapInstance.GetSpawnPosition(spawnPointName);
+
 		_player.GlobalPosition = spawnPos;
 		_player.Velocity = Vector3.Zero;
 
@@ -48,7 +58,7 @@ public partial class MapManager : Node
 		_cameraController.SetTarget(_player);
 		_cameraController.SnapToTarget();
 
-		GD.Print($"Changed to map: {mapScenePath}, Spawn Point: {spawnPointName}, Player Position: {spawnPos}");
+		GD.Print($"Changed to map: {_currentMapInstance.MapId}, Spawn Point: {spawnPointName}, Player Position: {spawnPos}");
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

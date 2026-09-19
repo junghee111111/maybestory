@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://o5kn67pr033"]
+
+[ext_resource type="Script" uid="uid://cclvb4dg5aidq" path="res://scripts/ui/DamageIndicator.cs" id="1_dmgind"]
+
+[node name="DamageIndicator" type="Node3D" unique_id=744059456]
+script = ExtResource("1_dmgind")
+
+[node name="SubLabel" type="Label3D" parent="." unique_id=1906967465]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0)
+billboard = 1
+no_depth_test = true
+font_size = 80
+outline_size = 6
+
+[node name="DamageLabel" type="Label3D" parent="." unique_id=993571085]
+billboard = 1
+no_depth_test = true
+text = "0"
+font_size = 100
+outline_size = 8

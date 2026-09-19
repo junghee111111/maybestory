@@ -6,11 +6,14 @@ public partial class Player : Life<PlayerStats>
 	[ExportGroup("Maybe :: Node Settings")]
 	[Export] public NodePath AnimationPlayerPath = "BaseChar/AnimationPlayer";
 	[Export] public NodePath VisualModelPath = "BaseChar";
+	[Export] public NodePath MobHitboxDetectorPath = "MobHitboxDetector";
 
 	private AnimationPlayer _animationPlayer;
 	private Node3D _visualModel;
+	private Area3D _mobHitboxDetector;
 	private BaseMap _currentMap;
 	private EquipManager _equipManager;
+	private SkillManager _skillManager;
 	private bool _isAttacking = false;
 
 	// KeyboardManager 핫키 이벤트로 쪼인 입력을 물리 프레임까지 보관해둔다.
@@ -20,14 +23,23 @@ public partial class Player : Life<PlayerStats>
 
 	private readonly string[] _attackAnimations = { "Stab1", "Swing1", "Swing2", "Swing3" };
 
+	public Player()
+	{
+		IsAttackable = true;
+		HitBusyDuration = 1.0f;
+		KnockbackThresholdPercentage = 0f; // 접촉 피격은 대미지량과 무관하게 항상 넉백
+	}
+
 	public override void _Ready()
 	{
 		base._Ready();
 
 		_animationPlayer = GetNode<AnimationPlayer>(AnimationPlayerPath);
 		_visualModel = GetNode<Node3D>(VisualModelPath);
+		_mobHitboxDetector = GetNode<Area3D>(MobHitboxDetectorPath);
 
 		_animationPlayer.AnimationFinished += OnAnimationFinished;
+		_mobHitboxDetector.AreaEntered += OnMobHitboxEntered;
 
 		// Re-resolve the owning map whenever the player is (re)parented into a new map's scene tree.
 		TreeEntered += RefreshCurrentMap;
@@ -35,6 +47,7 @@ public partial class Player : Life<PlayerStats>
 
 		// Equip basic sword
 		_equipManager = GetNode<EquipManager>("EquipManager");
+		_skillManager = GetNode<SkillManager>("SkillManager");
 
 		if (KeyboardManager.Instance != null)
 		{
@@ -49,18 +62,38 @@ public partial class Player : Life<PlayerStats>
 			return;
 		}
 
+		if (IsBusy)
+		{
+			return;
+		}
+
 		switch (binding.ContentId)
 		{
-			case "SkillAttack":
-				_attackQueued = true;
-				break;
 			case "SkillJump":
 				_jumpQueued = true;
 				break;
 			case "SkillPickUp":
 				_pickUpQueued = true;
 				break;
+			default:
+				if (!_isAttacking)
+					_skillManager.CastSkill(binding.ContentId);
+				break;
 		}
+	}
+
+	private void OnMobHitboxEntered(Area3D area)
+	{
+		if (IsBusy) return; // 이미 넉백 중이면 재갱신하지 않는다.
+		if (area.GetParent() is not Mob mob) return;
+
+		TakeDamage(mob.AttackPower, mob.GlobalPosition);
+	}
+
+	// 포탈 이동 등으로 화면이 가려진 동안 접촉 피격을 막기 위해 호출한다.
+	public void SetHurtboxMonitoring(bool enabled)
+	{
+		_mobHitboxDetector.Monitoring = enabled;
 	}
 
 	private void RefreshCurrentMap()
@@ -81,22 +114,22 @@ public partial class Player : Life<PlayerStats>
 			velocity.Y -= gravity * dt;
 		}
 
-		// Attack can be triggered while jumping, but not while already attacking.
+		// Attack can be triggered while jumping, but not while already attacking or busy (knockback).
 		bool attackRequested = _attackQueued;
 		_attackQueued = false;
-		if (attackRequested && !_isAttacking)
+		if (attackRequested && !_isAttacking && !IsBusy)
 		{
 			StartAttack();
 		}
 
 		bool pickUpRequested = _pickUpQueued;
 		_pickUpQueued = false;
-		if (pickUpRequested)
+		if (pickUpRequested && !IsBusy)
 		{
 			TryPickUp();
 		}
 
-		if (!_isAttacking)
+		if (!_isAttacking && !IsBusy)
 		{
 			// Handle Jump.
 			bool jumpRequested = _jumpQueued;
@@ -124,7 +157,7 @@ public partial class Player : Life<PlayerStats>
 		}
 		else
 		{
-			// Attacking locks out movement/jump input; smoothly bleed off horizontal speed instead of stopping instantly.
+			// Attacking/busy locks out movement/jump input; smoothly bleed off horizontal speed instead of stopping instantly.
 			velocity.X = Mathf.MoveToward(velocity.X, 0, DecelerationWhileAttacking * dt);
 			velocity.Z = Mathf.MoveToward(velocity.Z, 0, DecelerationWhileAttacking * dt);
 		}
@@ -133,11 +166,10 @@ public partial class Player : Life<PlayerStats>
 		MoveAndSlide();
 	}
 
-	private void StartAttack()
+	public void StartAttack()
 	{
+		GD.Print($"[{Name}] Attack started.");
 		_isAttacking = true;
-		string anim = _attackAnimations[GD.Randi() % (uint)_attackAnimations.Length];
-		_animationPlayer.Play(anim);
 	}
 
 	private void TryPickUp()

@@ -12,6 +12,7 @@ radius = 0.6948242
 height = 1.5917969
 
 [node name="BaseMobSmall" unique_id=1769357514 instance=ExtResource("1_s8lw5")]
+DamageIndicatorOffset = Vector3(0, 1, 0)
 StatsPath = NodePath("MobStats")
 
 [node name="CollisionShape3D" parent="." index="0" unique_id=179537389]
@@ -20,6 +21,9 @@ shape = SubResource("CapsuleShape3D_nooxl")
 
 [node name="Model" parent="." index="1" unique_id=1758400404 instance=ExtResource("2_rlhm3")]
 
-[node name="CollisionShape3D" parent="Area3D" parent_id_path=PackedInt32Array(596901717) index="0" unique_id=1769415485]
+[node name="Area3D" parent="." index="3" unique_id=596901717]
+collision_mask = 10
+
+[node name="CollisionShape3D" parent="Area3D" index="0" unique_id=1769415485]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8266982, 0)
 shape = SubResource("CapsuleShape3D_s8lw5")

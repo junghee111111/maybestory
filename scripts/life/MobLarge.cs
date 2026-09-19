@@ -1,6 +1,13 @@
 using Godot;
 public partial class MobLarge : Mob
 {
+    public MobLarge()
+    {
+        KnockbackThresholdPercentage = 9.0f;
+        KnockbackHorizontalForce = 8.0f;
+        KnockbackVerticalForce = 5.0f;
+    }
+
     // 다중 Area3D 히트박스로부터 맞은 부위에 따른 대미지 증감 계산
     public void TakePartDamage(string partName, int baseDamage)
     {

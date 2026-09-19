@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://tsuxtu1d33nn"]
+
+[ext_resource type="Script" uid="uid://bnblnxda7csdt" path="res://scripts/ui/HotKeyGridItem.cs" id="1_p5rxy"]
+
+[sub_resource type="Gradient" id="Gradient_fkauo"]
+colors = PackedColorArray(1, 1, 1, 1, 0.68307775, 0.6830772, 0.68307686, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_4kxuq"]
+gradient = SubResource("Gradient_fkauo")
+width = 40
+height = 40
+fill_to = Vector2(0, 1)
+
+[sub_resource type="FontFile" id="FontFile_mm1bc"]
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/variation_coordinates = {}
+cache/0/face_index = 0
+cache/0/embolden = 0.0
+cache/0/transform = Transform2D(1, 0, 0, 1, 0, 0)
+cache/0/spacing_top = 0
+cache/0/spacing_bottom = 0
+cache/0/spacing_space = 0
+cache/0/spacing_glyph = 0
+cache/0/baseline_offset = 0.0
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/12/0/ascent = 0.0
+cache/0/12/0/descent = 0.0
+cache/0/12/0/underline_position = 0.0
+cache/0/12/0/underline_thickness = 0.0
+cache/0/12/0/scale = 1.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_mti6b"]
+font = SubResource("FontFile_mm1bc")
+font_size = 12
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[node name="HotKeyGridItem" type="TextureRect" unique_id=754732485]
+texture = SubResource("GradientTexture2D_4kxuq")
+script = ExtResource("1_p5rxy")
+
+[node name="KeyIcon" type="TextureRect" parent="." unique_id=917678127]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+expand_mode = 2
+
+[node name="KeyLabel" type="Label" parent="." unique_id=385907092]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
+label_settings = SubResource("LabelSettings_mti6b")

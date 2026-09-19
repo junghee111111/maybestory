@@ -11,6 +11,7 @@ public partial class MobStatsData : Resource
     [Export] public int MaxHp = 50;
     [Export] public int MaxMp = 50;
     [Export] public int Defense = 5;
+    [Export] public int AttackPower = 10; // 플레이어 접촉 시 입히는 대미지
     [Export] public float MoveSpeed = 5.0f;
     [Export] public float JumpVelocity = 0.0f;
     [Export] public float Acceleration = 40.0f;
