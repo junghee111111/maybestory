@@ -1,0 +1,54 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/InventoryUI.cs" id="1_invui"]
+[ext_resource type="PackedScene" path="res://ui/inventory/InventorySlotUI.tscn" id="2_slot"]
+
+[node name="InventoryUI" type="Control"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = -160.0
+offset_right = 220.0
+offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_invui")
+SlotScene = ExtResource("2_slot")
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+
+[node name="EquipmentLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "장비"
+
+[node name="EquipmentGrid" type="GridContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+columns = 6
+
+[node name="ConsumableLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "소비"
+
+[node name="ConsumableGrid" type="GridContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+columns = 6
+
+[node name="EtcLabel" type="Label" parent="Panel/VBoxContainer"]
+layout_mode = 2
+text = "기타"
+
+[node name="EtcGrid" type="GridContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+columns = 6

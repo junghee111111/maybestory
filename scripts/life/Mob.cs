@@ -7,6 +7,10 @@ public abstract partial class Mob : Life<MobStats>
     public MobStatsData MobData; // 인스펙터에서 .tres 할당
     [Export] public NodePath VisualModelPath = "Model";
     [Export] public NodePath AnimationPlayerPath = "Model/AnimationPlayer";
+    [Export] public Godot.Collections.Array<ItemDropData> DropItems = new();
+
+    private static readonly PackedScene ItemDropScene = GD.Load<PackedScene>("res://item/ItemDrop.tscn");
+    private const float CoinDropChance = 0.6f;
 
     private AnimationPlayer _animPlayer;
     private Node3D _visualModel;
@@ -69,8 +73,6 @@ public abstract partial class Mob : Life<MobStats>
 
     public override void _PhysicsProcess(double delta)
     {
-        if (IsDead) return;
-
         float dt = (float)delta;
         Vector3 vel = Velocity;
 
@@ -78,6 +80,15 @@ public abstract partial class Mob : Life<MobStats>
         if (!IsOnFloor())
         {
             vel.Y -= 20.0f * dt;
+        }
+
+        // 사망 시에도 Die 애니메이션이 끝날 때까지 넉백 속도가 관성대로 흘러가도록 물리 이동은 계속 처리한다.
+        if (IsDead)
+        {
+            vel.Z = 0.0f;
+            Velocity = vel;
+            MoveAndSlide();
+            return;
         }
 
         if (!IsStunned && !IsBusy)
@@ -151,6 +162,41 @@ public abstract partial class Mob : Life<MobStats>
             return;
         }
         GD.Print($"[Mob] 경험치 {MobData.RewardExp} 지급 및 드랍 아이템 생성");
+
+        foreach (ItemDropData drop in DropItems)
+        {
+            if (drop?.Item == null || GD.Randf() > drop.DropRate)
+            {
+                continue;
+            }
+
+            SpawnDrop(drop.Item, 0, drop.Item.Item3DModelScene);
+        }
+
+        if (MapManager.Instance?.CoinModel != null && GD.Randf() <= CoinDropChance)
+        {
+            int coinCount = GD.RandRange(3, 5);
+            for (int i = 0; i < coinCount; i++)
+            {
+                SpawnDrop(null, 1, MapManager.Instance.CoinModel);
+            }
+        }
+    }
+
+    // 몬스터 위치에서 X(좌우), Y(위) 방향으로 흩뿌려지는 드랍 아이템을 하나 스폰한다. item이 null이면 코인으로 취급한다.
+    private void SpawnDrop(ItemData item, int coinAmount, PackedScene visualScene)
+    {
+        if (visualScene == null || ItemDropScene == null)
+        {
+            return;
+        }
+
+        ItemDrop dropInstance = ItemDropScene.Instantiate<ItemDrop>();
+        GetParent().AddChild(dropInstance);
+        dropInstance.GlobalPosition = GlobalPosition;
+
+        var initialVelocity = new Vector3((float)GD.RandRange(-4.0, 4.0), (float)GD.RandRange(6.0, 9.0), 0);
+        dropInstance.Setup(item, coinAmount, visualScene, initialVelocity);
     }
 
     private void OnAnimationFinished(StringName animName)

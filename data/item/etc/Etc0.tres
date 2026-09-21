@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://r25f0c5vyh4r"]
+
+[ext_resource type="PackedScene" uid="uid://b1wfimaeargvd" path="res://models/item/etc/Item0.glb" id="1_52m0c"]
+[ext_resource type="Script" uid="uid://f6lxe00ai3lg" path="res://resources/ItemData.cs" id="1_hasby"]
+
+[resource]
+script = ExtResource("1_hasby")
+ItemId = "Etc0"
+ItemName = "뚱땅보 조각"
+Description = "뚱땅보 조각입니다"
+Item3DModelScene = ExtResource("1_52m0c")
+Type = 2
+metadata/_custom_type_script = "uid://f6lxe00ai3lg"

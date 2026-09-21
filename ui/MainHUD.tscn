@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dwuv2cjbji22r" path="res://scripts/ui/MainHudController.cs" id="1_wy6lw"]
 [ext_resource type="PackedScene" uid="uid://tsuxtu1d33nn" path="res://ui/hud/HotKeyGridItem.tscn" id="2_siyem"]
+[ext_resource type="PackedScene" path="res://ui/inventory/InventoryUI.tscn" id="3_invui"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_4kxuq"]
 font_size = 12
@@ -242,3 +243,6 @@ Key = "D"
 [node name="KeyF" parent="UILayer/StatusPanel2/VBoxContainer/Grid-ASDF" unique_id=1377379833 instance=ExtResource("2_siyem")]
 layout_mode = 2
 Key = "F"
+
+[node name="InventoryUI" parent="UILayer" unique_id=1306835286 instance=ExtResource("3_invui")]
+layout_mode = 3

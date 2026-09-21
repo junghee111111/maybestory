@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ckihjy6f5882k"]
 
-[ext_resource type="PackedScene" uid="uid://brt06u8pab57u" path="res://models/weapon/sword.fbx" id="1_ghxuq"]
+[ext_resource type="PackedScene" uid="uid://brt06u8pab57u" path="res://models/item/weapon/sword.fbx" id="1_ghxuq"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gh32t"]
 size = Vector3(0.5233917, 1.9844818, 5.9308815)

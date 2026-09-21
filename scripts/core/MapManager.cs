@@ -9,6 +9,7 @@ public partial class MapManager : Node
 	[Export] public NodePath PlayerPath = "../LifeContainer/Player";
 	[Export] public NodePath CameraControllerPath = "../CameraController";
 	[Export] public PackedScene StartingMap;
+	[Export] public PackedScene CoinModel;
 
 	private Node3D _mapContainer;
 	private Player _player;

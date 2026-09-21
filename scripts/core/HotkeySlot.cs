@@ -12,15 +12,17 @@ public enum HotkeySlot
     Num1,
     Num2,
     Num3,
-    Num4
+    Num4,
+    I
 }
 
-// 슬롯에 무엇이 들어있는지 구분 (스킬 / 소비 아이템).
+// 슬롯에 무엇이 들어있는지 구분 (스킬 / 소비 아이템 / UI 토글).
 public enum SlotContentType
 {
     None,
     Skill,
-    Item
+    Item,
+    UI
 }
 
 // 슬롯 하나에 배치된 콘텐츠(스킬 또는 아이템 Id)를 표현하는 값 객체.

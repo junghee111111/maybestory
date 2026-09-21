@@ -49,14 +49,15 @@ public abstract partial class Life<TStats> : CharacterBody3D where TStats : Life
         int actualDamage = Stats.TakeDamage(damage);
         DamageIndicator.Spawn(GetTree().CurrentScene, GlobalPosition + DamageIndicatorOffset, actualDamage, isCritical, subText);
 
-        if (IsDead) return;
-
+        // 즉사 타격이어도 넉백은 적용되어야 하므로 IsDead 체크보다 먼저 계산한다.
         float damagePercent = Stats.MaxHp > 0 ? (float)damage / Stats.MaxHp * 100f : 0f;
         if (damagePercent >= KnockbackThresholdPercentage)
         {
             float knockDir = GlobalPosition.X >= hitSourcePosition.X ? 1.0f : -1.0f;
             Velocity = new Vector3(knockDir * KnockbackHorizontalForce, KnockbackVerticalForce, Velocity.Z);
         }
+
+        if (IsDead) return;
 
         IsBusy = true;
         GetTree().CreateTimer(HitBusyDuration).Timeout += () => IsBusy = false;

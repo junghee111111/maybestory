@@ -3,7 +3,8 @@ using Godot;
 public enum ItemType
 {
     Consumable,
-    Equipment
+    Equipment,
+    Etc,
 }
 
 public enum EquipSlot
@@ -24,6 +25,7 @@ public partial class ItemData : Resource
     [Export] public string ItemName = "빨간 포션";
     [Export(PropertyHint.MultilineText)] public string Description = "HP를 즉시 회복시켜주는 포션.";
     [Export] public Texture2D Icon;
+    [Export] public PackedScene Item3DModelScene;
     [Export] public ItemType Type = ItemType.Consumable;
 
     [ExportGroup("2. 소비 효과")]

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://bs4vmfw0v8v6"]
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://bkjq6fxkt775c"]
 
 [ext_resource type="Script" uid="uid://766c87qapfbh" path="res://resources/SkillData.cs" id="1_rtrd5"]
 [ext_resource type="Texture2D" uid="uid://hl8w41k0t8ia" path="res://demo/assets/textures/ProtGrid0.jpg" id="1_xrxv8"]

@@ -90,6 +90,15 @@ public partial class Player : Life<PlayerStats>
 		TakeDamage(mob.AttackPower, mob.GlobalPosition);
 	}
 
+	public override void TakeDamage(int damage, Vector3 hitSourcePosition, bool isCritical = false, string subText = "")
+	{
+		base.TakeDamage(damage, hitSourcePosition, isCritical, subText);
+
+		if (IsDead) return;
+
+		PlayAnimationIfNotPlaying("Busy", 0.1f);
+	}
+
 	// 포탈 이동 등으로 화면이 가려진 동안 접촉 피격을 막기 위해 호출한다.
 	public void SetHurtboxMonitoring(bool enabled)
 	{
@@ -194,11 +203,11 @@ public partial class Player : Life<PlayerStats>
 		}
 	}
 
-	private void PlayAnimationIfNotPlaying(string animationName)
+	private void PlayAnimationIfNotPlaying(string animationName, float blend = -1f)
 	{
 		if (_animationPlayer.CurrentAnimation != animationName && _animationPlayer.HasAnimation(animationName))
 		{
-			_animationPlayer.Play(animationName);
+			_animationPlayer.Play(animationName, blend);
 		}
 	}
 
