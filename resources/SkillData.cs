@@ -7,7 +7,8 @@ public enum SkillType
     ActiveBuff,        // 액티브 자가 버프 (인빈서블, 매직가드 등)
     ActiveProjectile,  // 액티브 투사체 공격 (홀리 에로우, 에너지 볼트 등)
     ActiveAutoTarget,  // 액티브 범위 자동 타게팅 공격 (힐, 홀리 포커스 등)
-    ActiveSummon       // 액티브 소환수 (바하뮤트, 드래곤 등)
+    ActiveSummon,      // 액티브 소환수 (바하뮤트, 드래곤 등)
+    ActivePickUp       // 액티브 아이템 줍기 (비용/애니메이션 없이 즉시 실행)
 }
 
 [GlobalClass]
@@ -36,6 +37,7 @@ public partial class SkillData : Resource
     [Export] public float BaseDamageMultiplier = 1.2f;    // 1레벨 대미지 계수 (마법 공격력 대비)
     [Export] public float DamageMultiplierPerLevel = 0.04f; // 레벨당 계수 증가폭
     [Export] public int TargetCount = 1;                   // 타격 가능한 몬스터 수
+    [Export] public int AttackCount = 1;                   // 적중 시 연속 타격 횟수 (새비지블로우처럼 1회 적중에 여러 번 대미지)
     [Export] public bool UseAttackRangeBasedOnWeaponMesh = true;
     [Export] public float AttackRangeW = 15.0f;
     [Export] public float AttackRangeH = 10.0f;

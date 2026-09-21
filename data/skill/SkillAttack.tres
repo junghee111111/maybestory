@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://bcbmk4dvbhfp8"]
+[gd_resource type="Resource" script_class="SkillData" format=3 uid="uid://bs4vmfw0v8v6"]
 
 [ext_resource type="Script" uid="uid://766c87qapfbh" path="res://resources/SkillData.cs" id="1_rtrd5"]
 [ext_resource type="Texture2D" uid="uid://2xyftqupr1b3" path="res://image/SkillIcon/SkillAttack.png" id="1_xrxv8"]
@@ -15,5 +15,11 @@ BaseHpCost = 0
 HpCostPerLevel = 0
 BaseMpCost = 0
 MpCostPerLevel = 0
-PreDelay = 0.5
+PreDelay = 0.4
+CastAnimationName = PackedStringArray("Swing2", "Swing3", "Swing1", "Stab1")
+AttackCount = 6
+UseAttackRangeBasedOnWeaponMesh = false
+AttackRangeW = 3.0
+AttackRangeH = 2.0
+AttackRangeD = 2.0
 metadata/_custom_type_script = "uid://766c87qapfbh"

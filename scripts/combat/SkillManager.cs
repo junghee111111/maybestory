@@ -10,6 +10,7 @@ public partial class SkillManager : Node
     private const float HeadshotMultiplier = 1.5f;
 
     [Export] public Godot.Collections.Array<SkillData> AllSkills = new(); // 에디터에서 .tres 등록
+    [Export] public bool DebugDrawVirtualHitbox = false;
 
     private readonly Dictionary<string, SkillData> _skillDataDict = new();
     private readonly Dictionary<string, int> _allocatedPoints = new();
@@ -93,6 +94,13 @@ public partial class SkillManager : Node
         if (level <= 0) return false; // 아직 안 찍은 스킬
 
         if (!_skillDataDict.TryGetValue(skillId, out var skill)) return false;
+
+        // 줍기는 비용/쿨타임/애니메이션 없이 즉시 처리한다.
+        if (skill.Type == SkillType.ActivePickUp)
+        {
+            _player.TryPickUp();
+            return true;
+        }
 
         // MP 체크 및 소모
         int mpCost = skill.GetMpCost(level);
@@ -206,13 +214,21 @@ public partial class SkillManager : Node
             await ToSignal(GetTree().CreateTimer(skill.PreDelay), SceneTreeTimer.SignalName.Timeout);
         }
 
-        List<(Mob Mob, bool IsHeadshot)> targets = skill.UseAttackRangeBasedOnWeaponMesh
+        List<Mob> targets = skill.UseAttackRangeBasedOnWeaponMesh
             ? FindTargetsInWeaponHitbox(skill)
             : FindTargetsInVirtualHitbox(skill);
 
-        foreach ((Mob target, bool isHeadshot) in targets)
+        int attackCount = Mathf.Max(1, skill.AttackCount);
+        foreach (Mob target in targets)
         {
-            (int dmg, bool isCritical) = CalculateDamage(skill, level, isHeadshot);
+            var damages = new int[attackCount];
+            bool anyCritical = false;
+            for (int i = 0; i < attackCount; i++)
+            {
+                (int dmg, bool isCritical) = CalculateDamage(skill, level);
+                damages[i] = dmg;
+                anyCritical |= isCritical;
+            }
 
             if (skill.HitVfxScene != null)
             {
@@ -222,40 +238,44 @@ public partial class SkillManager : Node
                 vfx.GlobalPosition = target.GlobalPosition + skill.HitVfxTargetOffset;
             }
 
-            target.TakeDamage(dmg, _player.GlobalPosition, isCritical, isHeadshot ? "Headshot" : "");
+            target.TakeDamage(damages, _player.GlobalPosition, anyCritical, "");
         }
     }
 
-    // 무기(Weapon/Area3D/HitArea)와 겹쳐진 몬스터의 하트박스(Area3D)로부터 대상과 헤드샷 여부를 찾는다.
-    private List<(Mob Mob, bool IsHeadshot)> FindTargetsInWeaponHitbox(SkillData skill)
+    // 무기(Weapon/Area3D/HitArea)와 겹쳐진 몬스터를 찾는다.
+    private List<Mob> FindTargetsInWeaponHitbox(SkillData skill)
     {
-        var found = new Dictionary<Mob, bool>();
+        var found = new HashSet<Mob>();
 
         Area3D hitArea = _equipManager?.WeaponHitArea;
-        if (hitArea == null) return new List<(Mob, bool)>();
+        if (hitArea == null) return new List<Mob>();
 
         foreach (Area3D area in hitArea.GetOverlappingAreas())
         {
             if (area.GetParent() is not Mob mob) continue;
-            found[mob] = false;
+            found.Add(mob);
         }
 
-        var targets = new List<(Mob, bool)>();
-        foreach (var kvp in found)
+        var targets = new List<Mob>();
+        foreach (Mob mob in found)
         {
             if (targets.Count >= skill.TargetCount) break;
-            targets.Add((kvp.Key, kvp.Value));
+            targets.Add(mob);
         }
         return targets;
     }
 
-    // AttackRangeW/H/D 크기의 가상 박스(플레이어 위치 + AttackRangeOffset)로 겹치는 대상과 헤드샷 여부를 찾는다.
-    private List<(Mob Mob, bool IsHeadshot)> FindTargetsInVirtualHitbox(SkillData skill)
+    // AttackRangeW/H/D(장착 무기의 AttackRange 배율 적용) 크기의 가상 박스(플레이어 위치 + AttackRangeOffset)로 겹치는 대상을 찾는다.
+    private List<Mob> FindTargetsInVirtualHitbox(SkillData skill)
     {
-        var targets = new List<(Mob, bool)>();
+        var targets = new List<Mob>();
 
-        Vector3 center = _player.GlobalPosition + skill.AttackRangeOffset;
-        var size = new Vector3(skill.AttackRangeW, skill.AttackRangeH, skill.AttackRangeD);
+        float weaponRangeMultiplier = _equipManager?.GetEquipped(EquipSlot.Weapon)?.AttackRange ?? 1.0f;
+        var size = new Vector3(skill.AttackRangeW * weaponRangeMultiplier, skill.AttackRangeH, skill.AttackRangeD);
+
+        // 바라보는 방향으로 가로폭의 절반만큼 밀어 캐릭터 앞쪽만 판정되도록 한다.
+        float facingDir = _player.GetNode<Node3D>("BaseChar").RotationDegrees.Y > 0 ? 1.0f : -1.0f;
+        Vector3 center = _player.GlobalPosition + skill.AttackRangeOffset + new Vector3(facingDir * size.X * 0.5f, size.Y * 0.5f, 0);
         var spaceState = _player.GetWorld3D().DirectSpaceState;
 
         var bodyQuery = new PhysicsShapeQueryParameters3D
@@ -265,44 +285,38 @@ public partial class SkillManager : Node
             CollisionMask = 5,
         };
 
-        var mobs = new List<Mob>();
+        DrawDebugHitbox(center, size);
+
         foreach (var hit in spaceState.IntersectShape(bodyQuery))
         {
-            if (mobs.Count >= skill.TargetCount) break;
-            if (hit["collider"].As<Node>() is Mob mob && !mobs.Contains(mob))
+            if (targets.Count >= skill.TargetCount) break;
+            if (hit["collider"].As<Node>() is Mob mob && !targets.Contains(mob))
             {
-                mobs.Add(mob);
+                targets.Add(mob);
             }
-        }
-
-        if (mobs.Count == 0) return targets;
-
-        // 2) 하트박스(레이어 16)로 헤드샷 여부만 별도로 판정
-        var areaQuery = new PhysicsShapeQueryParameters3D
-        {
-            Shape = new BoxShape3D { Size = size },
-            Transform = new Transform3D(Basis.Identity, center),
-            CollisionMask = 16,
-            CollideWithBodies = false,
-            CollideWithAreas = true,
-        };
-
-        var overlappedAreas = new HashSet<Area3D>();
-        foreach (var hit in spaceState.IntersectShape(areaQuery))
-        {
-            if (hit["collider"].As<Node>() is Area3D area)
-            {
-                overlappedAreas.Add(area);
-            }
-        }
-
-        foreach (Mob mob in mobs)
-        {
-            //bool isHeadshot = mob.HeadHurtbox != null && overlappedAreas.Contains(mob.HeadHurtbox);
-            //targets.Add((mob, isHeadshot));
         }
 
         return targets;
+    }
+
+    // DebugDrawVirtualHitbox가 켜져있으면 가상 히트박스를 반투명 박스로 잠깐 표시한다.
+    private void DrawDebugHitbox(Vector3 center, Vector3 size)
+    {
+        if (!DebugDrawVirtualHitbox) return;
+
+        var mesh = new MeshInstance3D
+        {
+            Mesh = new BoxMesh { Size = size },
+            MaterialOverride = new StandardMaterial3D
+            {
+                AlbedoColor = new Color(1f, 0f, 0f, 0.35f),
+                Transparency = BaseMaterial3D.TransparencyEnum.Alpha,
+                ShadingMode = BaseMaterial3D.ShadingModeEnum.Unshaded,
+            },
+        };
+        GetTree().CurrentScene.AddChild(mesh);
+        mesh.GlobalPosition = center;
+        GetTree().CreateTimer(0.2f).Timeout += mesh.QueueFree;
     }
 
     // 5. 소환수형

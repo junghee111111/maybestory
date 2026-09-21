@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="ItemData" format=3 uid="uid://r25f0c5vyh4r"]
 
-[ext_resource type="PackedScene" uid="uid://b1wfimaeargvd" path="res://models/item/etc/Item0.glb" id="1_52m0c"]
+[ext_resource type="PackedScene" uid="uid://nr837i8flv1h" path="res://item/etc/Etc0.tscn" id="1_52m0c"]
 [ext_resource type="Script" uid="uid://f6lxe00ai3lg" path="res://resources/ItemData.cs" id="1_hasby"]
 
 [resource]

@@ -1,7 +1,15 @@
 [gd_resource type="Resource" script_class="MobStatsData" format=3 uid="uid://btwt2ttn73gcb"]
 
 [ext_resource type="PackedScene" uid="uid://dh3rabyh47t3b" path="res://life/mob/Mob0.tscn" id="1_4dt2g"]
+[ext_resource type="Script" uid="uid://jmt8pv1drfxm" path="res://resources/ItemDropData.cs" id="1_jenti"]
 [ext_resource type="Script" uid="uid://bnte87y05g05v" path="res://resources/MobStatsData.cs" id="1_q4hsp"]
+[ext_resource type="Resource" uid="uid://r25f0c5vyh4r" path="res://data/item/etc/Etc0.tres" id="2_pba6j"]
+
+[sub_resource type="Resource" id="Resource_ghxuq"]
+script = ExtResource("1_jenti")
+Item = ExtResource("2_pba6j")
+DropRate = 0.7
+metadata/_custom_type_script = "uid://jmt8pv1drfxm"
 
 [resource]
 script = ExtResource("1_q4hsp")
@@ -13,4 +21,5 @@ MaxMp = 8
 Defense = 0
 MoveSpeed = 1.0
 RewardExp = 3
+DropItems = Array[ExtResource("1_jenti")]([SubResource("Resource_ghxuq")])
 metadata/_custom_type_script = "uid://bnte87y05g05v"

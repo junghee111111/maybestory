@@ -23,5 +23,5 @@ public partial class MobStatsData : Resource
     [Export] public int RewardMaxMoney = 15;
 
     [ExportGroup("드랍 테이블")]
-    [Export] public Godot.Collections.Array<PackedScene> RewardItemScenes = new();
+    [Export] public Godot.Collections.Array<ItemDropData> DropItems = new();
 }

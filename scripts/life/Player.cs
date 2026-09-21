@@ -7,6 +7,7 @@ public partial class Player : Life<PlayerStats>
 	[Export] public NodePath AnimationPlayerPath = "BaseChar/AnimationPlayer";
 	[Export] public NodePath VisualModelPath = "BaseChar";
 	[Export] public NodePath MobHitboxDetectorPath = "MobHitboxDetector";
+	[Export] public float PickupRadius = 2.5f;
 
 	private AnimationPlayer _animationPlayer;
 	private Node3D _visualModel;
@@ -19,15 +20,14 @@ public partial class Player : Life<PlayerStats>
 	// KeyboardManager 핫키 이벤트로 쪼인 입력을 물리 프레임까지 보관해둔다.
 	private bool _attackQueued = false;
 	private bool _jumpQueued = false;
-	private bool _pickUpQueued = false;
 
-	private readonly string[] _attackAnimations = { "Stab1", "Swing1", "Swing2", "Swing3" };
+	private readonly string[] _attackAnimations = { "Stab1", "Swing1", "Swing2", "Swing3", "Spell1" };
 
 	public Player()
 	{
 		IsAttackable = true;
 		HitBusyDuration = 1.0f;
-		KnockbackThresholdPercentage = 0f; // 접촉 피격은 대미지량과 무관하게 항상 넉백
+		KnockbackThresholdPercentage = 1f; // 접촉 피격은 대미지량과 무관하게 항상 넉백
 	}
 
 	public override void _Ready()
@@ -72,9 +72,6 @@ public partial class Player : Life<PlayerStats>
 			case "SkillJump":
 				_jumpQueued = true;
 				break;
-			case "SkillPickUp":
-				_pickUpQueued = true;
-				break;
 			default:
 				if (!_isAttacking)
 					_skillManager.CastSkill(binding.ContentId);
@@ -90,13 +87,16 @@ public partial class Player : Life<PlayerStats>
 		TakeDamage(mob.AttackPower, mob.GlobalPosition);
 	}
 
-	public override void TakeDamage(int damage, Vector3 hitSourcePosition, bool isCritical = false, string subText = "")
+	public override void TakeDamage(int[] damages, Vector3 hitSourcePosition, bool isCritical = false, string subText = "")
 	{
-		base.TakeDamage(damage, hitSourcePosition, isCritical, subText);
+		base.TakeDamage(damages, hitSourcePosition, isCritical, subText);
 
-		if (IsDead) return;
-
-		PlayAnimationIfNotPlaying("Busy", 0.1f);
+		// Busy 애니메이션이 공격 애니메이션을 가로채면 animation_finished가 발생하지 않아
+		// _isAttacking이 계속 true로 남으므로 여기서 직접 풀어준다.
+		if (!_isAttacking)
+		{
+			PlayAnimationIfNotPlaying("Busy", 0.1f);
+		}
 	}
 
 	// 포탈 이동 등으로 화면이 가려진 동안 접촉 피격을 막기 위해 호출한다.
@@ -129,13 +129,6 @@ public partial class Player : Life<PlayerStats>
 		if (attackRequested && !_isAttacking && !IsBusy)
 		{
 			StartAttack();
-		}
-
-		bool pickUpRequested = _pickUpQueued;
-		_pickUpQueued = false;
-		if (pickUpRequested && !IsBusy)
-		{
-			TryPickUp();
 		}
 
 		if (!_isAttacking && !IsBusy)
@@ -181,10 +174,43 @@ public partial class Player : Life<PlayerStats>
 		_isAttacking = true;
 	}
 
-	private void TryPickUp()
+	public void TryPickUp()
 	{
-		// TODO: hook up to an actual item pickup/interaction system once one exists.
-		GD.Print($"[{Name}] Pick up requested.");
+		ItemDrop closest = FindClosestDrop();
+		closest?.CollectTo(GlobalPosition, () => ApplyPickup(closest));
+	}
+
+	private ItemDrop FindClosestDrop()
+	{
+		ItemDrop closest = null;
+		float closestDist = PickupRadius;
+
+		foreach (Node node in GetTree().GetNodesInGroup("ItemDrop"))
+		{
+			if (node is not ItemDrop drop || drop.IsBeingCollected) continue;
+
+			float dist = drop.GlobalPosition.DistanceTo(GlobalPosition);
+			if (dist <= closestDist)
+			{
+				closest = drop;
+				closestDist = dist;
+			}
+		}
+
+		return closest;
+	}
+
+	// 아이템이면 인벤토리로, 코인이면 소지금으로 반영한다.
+	private void ApplyPickup(ItemDrop drop)
+	{
+		if (drop.Item != null)
+		{
+			InventoryManager.Instance?.AddItem(drop.Item, 1);
+		}
+		else
+		{
+			Stats.AddMoney(drop.CoinAmount);
+		}
 	}
 
 	private void UpdateLocomotionAnimation(float moveInput)
@@ -218,6 +244,7 @@ public partial class Player : Life<PlayerStats>
 			if (animName == attackAnim)
 			{
 				_isAttacking = false;
+				if (IsBusy) PlayAnimationIfNotPlaying("Busy", 0.1f);
 				break;
 			}
 		}

@@ -9,6 +9,6 @@ SkillId = "SkillPickUp"
 SkillName = "줍기"
 Description = "아이템을 줍는다."
 Icon = ExtResource("1_xrxv8")
-Type = 3
+Type = 5
 MaxSkillLevel = 1
 metadata/_custom_type_script = "uid://766c87qapfbh"

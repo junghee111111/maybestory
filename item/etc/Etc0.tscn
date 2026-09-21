@@ -3,3 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://b1wfimaeargvd" path="res://models/item/etc/Item0.glb" id="1_ulf46"]
 
 [node name="Item0" unique_id=738727120 instance=ExtResource("1_ulf46")]
+
+[node name="Cube" parent="." index="0" unique_id=209508676]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.49199128, 0)

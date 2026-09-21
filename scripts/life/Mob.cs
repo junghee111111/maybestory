@@ -7,7 +7,6 @@ public abstract partial class Mob : Life<MobStats>
     public MobStatsData MobData; // 인스펙터에서 .tres 할당
     [Export] public NodePath VisualModelPath = "Model";
     [Export] public NodePath AnimationPlayerPath = "Model/AnimationPlayer";
-    [Export] public Godot.Collections.Array<ItemDropData> DropItems = new();
 
     private static readonly PackedScene ItemDropScene = GD.Load<PackedScene>("res://item/ItemDrop.tscn");
     private const float CoinDropChance = 0.6f;
@@ -62,9 +61,9 @@ public abstract partial class Mob : Life<MobStats>
         MobData = data;
     }
 
-    public override void TakeDamage(int damage, Vector3 hitSourcePosition, bool isCritical = false, string subText = "")
+    public override void TakeDamage(int[] damages, Vector3 hitSourcePosition, bool isCritical = false, string subText = "")
     {
-        base.TakeDamage(damage, hitSourcePosition, isCritical, subText);
+        base.TakeDamage(damages, hitSourcePosition, isCritical, subText);
 
         if (IsDead) return;
 
@@ -163,7 +162,7 @@ public abstract partial class Mob : Life<MobStats>
         }
         GD.Print($"[Mob] 경험치 {MobData.RewardExp} 지급 및 드랍 아이템 생성");
 
-        foreach (ItemDropData drop in DropItems)
+        foreach (ItemDropData drop in MobData.DropItems)
         {
             if (drop?.Item == null || GD.Randf() > drop.DropRate)
             {
@@ -195,7 +194,7 @@ public abstract partial class Mob : Life<MobStats>
         GetParent().AddChild(dropInstance);
         dropInstance.GlobalPosition = GlobalPosition;
 
-        var initialVelocity = new Vector3((float)GD.RandRange(-4.0, 4.0), (float)GD.RandRange(6.0, 9.0), 0);
+        var initialVelocity = new Vector3((float)GD.RandRange(-7.0, 7.0), (float)GD.RandRange(10.0, 14.0), 0);
         dropInstance.Setup(item, coinAmount, visualScene, initialVelocity);
     }
 

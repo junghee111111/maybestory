@@ -6,13 +6,23 @@ public partial class PlayerStats : LifeStats
 {
     public event Action<int> OnLevelUp;
     public event Action OnExpChanged;
+    public event Action OnMoneyChanged;
 
     [ExportGroup("플레이어 성장")]
+    private int _money = 0;
     [Export] public int CurrentExp = 0;
     [Export] public int MaxExp = 15;
     [Export] public int StatPoints = 0;   // AP
     [Export] public int SkillPoints = 0;  // SP
     [Export] public JobType CurrentJob = JobType.Beginner;
+
+    public int Money => _money;
+
+    public void AddMoney(int amount)
+    {
+        _money = Mathf.Max(0, _money + amount);
+        OnMoneyChanged?.Invoke();
+    }
 
     public void AddExp(int amount)
     {

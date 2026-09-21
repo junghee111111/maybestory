@@ -27,6 +27,7 @@ public abstract partial class Life<TStats> : CharacterBody3D where TStats : Life
     protected bool IsBusy = false;
 
     protected TStats Stats;
+    private const float ComboHitInterval = 0.03f;
 
     public int AttackPower => Stats?.AttackPower ?? 0;
 
@@ -42,22 +43,43 @@ public abstract partial class Life<TStats> : CharacterBody3D where TStats : Life
         Stats.OnDied += OnDeath;
     }
 
-    public virtual void TakeDamage(int damage, Vector3 hitSourcePosition, bool isCritical = false, string subText = "")
+    public void TakeDamage(int damage, Vector3 hitSourcePosition, bool isCritical = false, string subText = "")
+        => TakeDamage(new[] { damage }, hitSourcePosition, isCritical, subText);
+
+    // damages 배열의 각 원소를 ComboHitInterval 간격으로 순차 적용하며 그때마다 DamageIndicator를 띄운다.
+    public virtual void TakeDamage(int[] damages, Vector3 hitSourcePosition, bool isCritical = false, string subText = "")
     {
-        if (!IsAttackable || IsDead || Stats == null) return;
+        if (!IsAttackable || IsDead || Stats == null || IsBusy || damages == null || damages.Length == 0) return;
 
-        int actualDamage = Stats.TakeDamage(damage);
-        DamageIndicator.Spawn(GetTree().CurrentScene, GlobalPosition + DamageIndicatorOffset, actualDamage, isCritical, subText);
+        ApplyDamageSequence(damages, hitSourcePosition, isCritical, subText);
+    }
 
-        // 즉사 타격이어도 넉백은 적용되어야 하므로 IsDead 체크보다 먼저 계산한다.
-        float damagePercent = Stats.MaxHp > 0 ? (float)damage / Stats.MaxHp * 100f : 0f;
-        if (damagePercent >= KnockbackThresholdPercentage)
+    private async void ApplyDamageSequence(int[] damages, Vector3 hitSourcePosition, bool isCritical, string subText)
+    {
+        for (int i = 0; i < damages.Length; i++)
         {
-            float knockDir = GlobalPosition.X >= hitSourcePosition.X ? 1.0f : -1.0f;
-            Velocity = new Vector3(knockDir * KnockbackHorizontalForce, KnockbackVerticalForce, Velocity.Z);
-        }
+            int actualDamage = Stats.TakeDamage(damages[i]);
+            DamageIndicator.Spawn(GetTree().CurrentScene, GlobalPosition + DamageIndicatorOffset, actualDamage, isCritical, subText);
 
-        if (IsDead) return;
+            // 즉사 타격이어도 넉백은 적용되어야 하므로 IsDead 체크보다 먼저 계산한다. (넉백은 최초 타격 기준 1회만 적용)
+            if (i == 0)
+            {
+                float damagePercent = Stats.MaxHp > 0 ? (float)damages[i] / Stats.MaxHp * 100f : 0f;
+                if (damagePercent >= KnockbackThresholdPercentage)
+                {
+                    float knockDir = GlobalPosition.X >= hitSourcePosition.X ? 1.0f : -1.0f;
+                    Velocity = new Vector3(knockDir * KnockbackHorizontalForce, KnockbackVerticalForce, Velocity.Z);
+                }
+            }
+
+            if (IsDead) return;
+
+            if (i < damages.Length - 1)
+            {
+                await ToSignal(GetTree().CreateTimer(ComboHitInterval), SceneTreeTimer.SignalName.Timeout);
+                if (IsDead) return;
+            }
+        }
 
         IsBusy = true;
         GetTree().CreateTimer(HitBusyDuration).Timeout += () => IsBusy = false;
