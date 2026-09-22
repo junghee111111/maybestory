@@ -177,7 +177,7 @@ public partial class Player : Life<PlayerStats>
 	public void TryPickUp()
 	{
 		ItemDrop closest = FindClosestDrop();
-		closest?.CollectTo(GlobalPosition, () => ApplyPickup(closest));
+		closest?.CollectTo(this, () => ApplyPickup(closest));
 	}
 
 	private ItemDrop FindClosestDrop()

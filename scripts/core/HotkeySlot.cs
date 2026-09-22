@@ -9,6 +9,7 @@ public enum HotkeySlot
     W,
     E,
     R,
+    K,
     Num1,
     Num2,
     Num3,

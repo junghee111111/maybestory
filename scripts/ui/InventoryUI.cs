@@ -2,7 +2,7 @@ using Godot;
 using System.Collections.Generic;
 
 // 인벤토리 패널: 장비(슬롯 고정) + 소비/기타(아이템별 스택) 를 그려주고 I키로 열고 닫는다.
-public partial class InventoryUI : Control
+public partial class InventoryUI : UIWindowPanel
 {
     [Export] public NodePath EquipmentGridPath = "Panel/VBoxContainer/EquipmentGrid";
     [Export] public NodePath ConsumableGridPath = "Panel/VBoxContainer/ConsumableGrid";
@@ -19,7 +19,8 @@ public partial class InventoryUI : Control
 
     public override void _Ready()
     {
-        Visible = false;
+        WindowContentId = "UI_INVENTORY";
+        base._Ready();
 
         _equipmentGrid = GetNode<GridContainer>(EquipmentGridPath);
         _consumableGrid = GetNode<GridContainer>(ConsumableGridPath);
@@ -44,35 +45,17 @@ public partial class InventoryUI : Control
 
         inventory.OnEquipmentSlotChanged += OnEquipmentSlotChanged;
         inventory.OnStackChanged += OnStackChanged;
-
-        if (KeyboardManager.Instance != null)
-        {
-            KeyboardManager.Instance.OnSlotActivated += OnHotkeyActivated;
-        }
     }
 
     public override void _ExitTree()
     {
+        base._ExitTree();
+
         if (InventoryManager.Instance != null)
         {
             InventoryManager.Instance.OnEquipmentSlotChanged -= OnEquipmentSlotChanged;
             InventoryManager.Instance.OnStackChanged -= OnStackChanged;
         }
-
-        if (KeyboardManager.Instance != null)
-        {
-            KeyboardManager.Instance.OnSlotActivated -= OnHotkeyActivated;
-        }
-    }
-
-    private void OnHotkeyActivated(HotkeySlot slot, SlotBinding binding)
-    {
-        if (binding.ContentType != SlotContentType.UI || binding.ContentId != "UI_INVENTORY")
-        {
-            return;
-        }
-
-        Visible = !Visible;
     }
 
     private void BuildEquipmentSlots(InventoryManager inventory)

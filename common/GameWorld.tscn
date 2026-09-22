@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dvijbywig0qns" path="res://scripts/core/MapManager.cs" id="1_6uab5"]
 [ext_resource type="Script" uid="uid://dyfhca5teb8b6" path="res://scripts/core/KeyboardManager.cs" id="1_jvlke"]
+[ext_resource type="Script" path="res://scripts/core/WindowManager.cs" id="1_winmgr"]
 [ext_resource type="Script" path="res://scripts/core/InventoryManager.cs" id="1_invmgr"]
 [ext_resource type="Script" uid="uid://ray7pgjfjdxs" path="res://scripts/core/CameraController.cs" id="2_bp2gk"]
 [ext_resource type="PackedScene" uid="uid://db0d5qldeejq5" path="res://life/character/Player.tscn" id="3_bp2gk"]
@@ -12,6 +13,9 @@
 
 [node name="KeyboardManager" type="Node" parent="." unique_id=496760227]
 script = ExtResource("1_jvlke")
+
+[node name="WindowManager" type="Node" parent="." unique_id=706660228]
+script = ExtResource("1_winmgr")
 
 [node name="InventoryManager" type="Node" parent="." unique_id=1284975643]
 script = ExtResource("1_invmgr")

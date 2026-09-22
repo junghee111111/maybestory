@@ -13,7 +13,7 @@ public partial class KeyboardManager : Node
         HotkeySlot.A, HotkeySlot.S, HotkeySlot.D, HotkeySlot.F,
         HotkeySlot.Q, HotkeySlot.W, HotkeySlot.E, HotkeySlot.R,
         HotkeySlot.Num1, HotkeySlot.Num2, HotkeySlot.Num3, HotkeySlot.Num4,
-        HotkeySlot.I,
+        HotkeySlot.I, HotkeySlot.K,
     };
 
     private static readonly Dictionary<HotkeySlot, Key> DefaultKeys = new()
@@ -31,15 +31,21 @@ public partial class KeyboardManager : Node
         { HotkeySlot.Num3, Key.Key3 },
         { HotkeySlot.Num4, Key.Key4 },
         { HotkeySlot.I, Key.I },
+        { HotkeySlot.K, Key.K },
     };
 
-    // 기본 슬롯 배치: A=공격, D=점프, F=줍기.
+    // 기본 슬롯 배치: A=공격, D=점프, F=줍기. E/K/S/W/Q는 각각 장비/스킬/스탯/월드맵/퀘스트 창 토글.
     private static readonly Dictionary<HotkeySlot, SlotBinding> DefaultBindings = new()
     {
         { HotkeySlot.A, new SlotBinding(SlotContentType.Skill, "SkillAttack") },
         { HotkeySlot.D, new SlotBinding(SlotContentType.Skill, "SkillJump") },
         { HotkeySlot.F, new SlotBinding(SlotContentType.Skill, "SkillPickUp") },
         { HotkeySlot.I, new SlotBinding(SlotContentType.UI, "UI_INVENTORY") },
+        { HotkeySlot.E, new SlotBinding(SlotContentType.UI, "UI_EQUIPMENT") },
+        { HotkeySlot.K, new SlotBinding(SlotContentType.UI, "UI_SKILL") },
+        { HotkeySlot.S, new SlotBinding(SlotContentType.UI, "UI_STAT") },
+        { HotkeySlot.W, new SlotBinding(SlotContentType.UI, "UI_WORLDMAP") },
+        { HotkeySlot.Q, new SlotBinding(SlotContentType.UI, "UI_QUEST") },
     };
 
     private const string ConfigPath = "user://keybinds.cfg";

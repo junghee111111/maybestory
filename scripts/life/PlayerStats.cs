@@ -1,9 +1,19 @@
 using Godot;
 using System;
 
+public enum StatKind
+{
+    Str,
+    Dex,
+    Int,
+    Luk,
+}
+
 [GlobalClass]
 public partial class PlayerStats : LifeStats
 {
+    public static PlayerStats Instance { get; private set; }
+
     public event Action<int> OnLevelUp;
     public event Action OnExpChanged;
     public event Action OnMoneyChanged;
@@ -18,10 +28,34 @@ public partial class PlayerStats : LifeStats
 
     public int Money => _money;
 
+    public override void _Ready()
+    {
+        base._Ready();
+        Instance = this;
+    }
+
     public void AddMoney(int amount)
     {
         _money = Mathf.Max(0, _money + amount);
         OnMoneyChanged?.Invoke();
+    }
+
+    // 스탯 포인트(AP) 1개를 소모해 원하는 스탯을 1 올린다. StatUI의 + 버튼에서 사용.
+    public bool AllocateStatPoint(StatKind kind)
+    {
+        if (StatPoints <= 0) return false;
+
+        switch (kind)
+        {
+            case StatKind.Str: Str++; break;
+            case StatKind.Dex: Dex++; break;
+            case StatKind.Int: Int++; break;
+            case StatKind.Luk: Luk++; break;
+        }
+
+        StatPoints--;
+        RaiseStatsChanged();
+        return true;
     }
 
     public void AddExp(int amount)

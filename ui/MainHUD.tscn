@@ -3,6 +3,11 @@
 [ext_resource type="Script" uid="uid://dwuv2cjbji22r" path="res://scripts/ui/MainHudController.cs" id="1_wy6lw"]
 [ext_resource type="PackedScene" uid="uid://tsuxtu1d33nn" path="res://ui/hud/HotKeyGridItem.tscn" id="2_siyem"]
 [ext_resource type="PackedScene" path="res://ui/inventory/InventoryUI.tscn" id="3_invui"]
+[ext_resource type="PackedScene" path="res://ui/equipment/EquipmentUI.tscn" id="5_equipui"]
+[ext_resource type="PackedScene" path="res://ui/skill/SkillUI.tscn" id="6_skillui"]
+[ext_resource type="PackedScene" path="res://ui/stat/StatUI.tscn" id="7_statui"]
+[ext_resource type="PackedScene" path="res://ui/worldmap/WorldMapUI.tscn" id="8_mapui"]
+[ext_resource type="PackedScene" path="res://ui/quest/QuestUI.tscn" id="9_questui"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_4kxuq"]
 font_size = 12
@@ -245,4 +250,19 @@ layout_mode = 2
 Key = "F"
 
 [node name="InventoryUI" parent="UILayer" unique_id=1306835286 instance=ExtResource("3_invui")]
+layout_mode = 3
+
+[node name="EquipmentUI" parent="UILayer" instance=ExtResource("5_equipui")]
+layout_mode = 3
+
+[node name="SkillUI" parent="UILayer" instance=ExtResource("6_skillui")]
+layout_mode = 3
+
+[node name="StatUI" parent="UILayer" instance=ExtResource("7_statui")]
+layout_mode = 3
+
+[node name="WorldMapUI" parent="UILayer" instance=ExtResource("8_mapui")]
+layout_mode = 3
+
+[node name="QuestUI" parent="UILayer" instance=ExtResource("9_questui")]
 layout_mode = 3

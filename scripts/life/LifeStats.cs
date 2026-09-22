@@ -74,4 +74,7 @@ public partial class LifeStats : Node
         CurrentHp = Mathf.Min(MaxHp, CurrentHp + amount);
         OnHpChanged?.Invoke();
     }
+
+    // 파생 클래스(같은 이벤트 필드를 직접 Invoke할 수 없으므로)에서 스탯 변경을 알릴 때 사용한다.
+    protected void RaiseStatsChanged() => OnStatsChanged?.Invoke();
 }

@@ -13,7 +13,15 @@ public partial class ItemDrop : CharacterBody3D
     private const float PickupFlyDuration = 0.5f;
     private const float PickupLingerDuration = 0.5f;
 
+    [Export] public Vector3 PickupTargetOffset = new Vector3(0, 2.2f, 0); // 플레이어 머리 쪽 위치 보정
+    [Export] public float PickupArcHeight = 2.0f; // 날아가는 도중 머리 위로 솟는 높이
+
     private Node3D _visualContainer;
+    private Node3D _collectTarget;
+    private Action _onArrived;
+    private Vector3 _collectStartPosition;
+    private float _collectElapsed;
+    private bool _isFlyingToTarget;
 
     public ItemData Item { get; private set; }
     public int CoinAmount { get; private set; }
@@ -45,6 +53,12 @@ public partial class ItemDrop : CharacterBody3D
 
     public override void _PhysicsProcess(double delta)
     {
+        if (_isFlyingToTarget)
+        {
+            UpdateFlyToTarget((float)delta);
+            return;
+        }
+
         if (IsBeingCollected) return;
 
         float dt = (float)delta;
@@ -64,8 +78,8 @@ public partial class ItemDrop : CharacterBody3D
         MoveAndSlide();
     }
 
-    // targetPosition으로 0.5초간 easeIn으로 날아간 뒤 onArrived를 호출하고, 추가로 0.5초 뒤 소멸한다.
-    public void CollectTo(Vector3 targetPosition, Action onArrived)
+    // target을 매 물리 프레임 실시간으로 추적하며, 머리 위로 솟았다가 머리 쪽으로 떨어지는 뒤집힌 이차함수(포물선) 궤적으로 날아간 뒤 onArrived를 호출하고 0.5초 뒤 소멸한다.
+    public void CollectTo(Node3D target, Action onArrived)
     {
         if (IsBeingCollected) return;
         IsBeingCollected = true;
@@ -74,15 +88,32 @@ public partial class ItemDrop : CharacterBody3D
         CollisionLayer = 0;
         CollisionMask = 0;
 
-        Tween tween = CreateTween();
-        tween.SetEase(Tween.EaseType.In);
-        tween.SetTrans(Tween.TransitionType.Quad);
-        tween.TweenProperty(this, "global_position", targetPosition, PickupFlyDuration);
-        tween.TweenCallback(Callable.From(() =>
+        _collectTarget = target;
+        _onArrived = onArrived;
+        _collectStartPosition = GlobalPosition;
+        _collectElapsed = 0f;
+        _isFlyingToTarget = true;
+    }
+
+    private void UpdateFlyToTarget(float dt)
+    {
+        _collectElapsed += dt;
+        float t = Mathf.Clamp(_collectElapsed / PickupFlyDuration, 0f, 1f);
+        float easedT = t * t; // easeIn
+
+        Vector3 targetPos = _collectTarget != null ? _collectTarget.GlobalPosition + PickupTargetOffset : _collectStartPosition;
+
+        Vector3 horizontal = _collectStartPosition.Lerp(targetPos, easedT);
+        float baseY = Mathf.Lerp(_collectStartPosition.Y, targetPos.Y, easedT);
+        float arc = PickupArcHeight * 4f * t * (1f - t); // -x^2 형태로 중간에 정점을 찍는 아치
+        GlobalPosition = new Vector3(horizontal.X, baseY + arc, horizontal.Z);
+
+        if (t >= 1f)
         {
-            onArrived?.Invoke();
+            _isFlyingToTarget = false;
+            _onArrived?.Invoke();
             _visualContainer.Visible = false;
             GetTree().CreateTimer(PickupLingerDuration).Timeout += QueueFree;
-        }));
+        }
     }
 }
