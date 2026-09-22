@@ -91,5 +91,28 @@ public abstract partial class Life<TStats> : CharacterBody3D where TStats : Life
     //     Stats?.HealHp(amount);
     // }
 
+    // 맵 CamBounds(MinBound~MaxBound) 밖으로 캐릭터/몬스터가 나가지 못하도록 위치를 제한한다.
+    protected void ClampPositionToMapBounds()
+    {
+        if (MapManager.Instance == null) return;
+
+        Vector3 min = MapManager.Instance.MinBound;
+        Vector3 max = MapManager.Instance.MaxBound;
+
+        Vector3 pos = GlobalPosition;
+        float clampedX = Mathf.Clamp(pos.X, min.X, max.X);
+        float clampedY = Mathf.Clamp(pos.Y, min.Y, max.Y);
+
+        if (!Mathf.IsEqualApprox(clampedX, pos.X) || !Mathf.IsEqualApprox(clampedY, pos.Y))
+        {
+            Vector3 vel = Velocity;
+            if (!Mathf.IsEqualApprox(clampedX, pos.X)) vel.X = 0;
+            if (!Mathf.IsEqualApprox(clampedY, pos.Y)) vel.Y = 0;
+            Velocity = vel;
+
+            GlobalPosition = new Vector3(clampedX, clampedY, pos.Z);
+        }
+    }
+
     public abstract void OnDeath();
 }

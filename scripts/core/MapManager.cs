@@ -5,6 +5,10 @@ public partial class MapManager : Node
 {
 	public static MapManager Instance { get; private set; }
 
+	// 현재 맵의 CamBounds(MinBound=왼쪽아래, MaxBound=오른쪽위). 카메라 클램프 및 캐릭터/몹 이동 제한에 사용.
+	public Vector3 MinBound { get; private set; }
+	public Vector3 MaxBound { get; private set; }
+
 	[Export] public NodePath MapContainerPath = "../MapContainer";
 	[Export] public NodePath PlayerPath = "../LifeContainer/Player";
 	[Export] public NodePath CameraControllerPath = "../CameraController";
@@ -55,6 +59,8 @@ public partial class MapManager : Node
 		_player.Velocity = Vector3.Zero;
 
 		var (minBound, maxBound) = _currentMapInstance.GetCameraBounds();
+		MinBound = minBound;
+		MaxBound = maxBound;
 		_cameraController.SetBounds(minBound, maxBound, _currentMapInstance.CameraDistance);
 		_cameraController.SetTarget(_player);
 		_cameraController.SnapToTarget();

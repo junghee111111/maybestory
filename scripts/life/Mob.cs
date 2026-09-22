@@ -122,6 +122,7 @@ public abstract partial class Mob : Life<MobStats>
         vel.Z = 0.0f;
         Velocity = vel;
         MoveAndSlide();
+        ClampPositionToMapBounds();
 
         // 횡스크롤 Z축 고정
         Vector3 pos = GlobalPosition;

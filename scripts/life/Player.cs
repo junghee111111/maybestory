@@ -166,6 +166,7 @@ public partial class Player : Life<PlayerStats>
 
 		Velocity = velocity;
 		MoveAndSlide();
+		ClampPositionToMapBounds();
 	}
 
 	public void StartAttack()
