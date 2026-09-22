@@ -72,17 +72,17 @@ public abstract partial class Life<TStats> : CharacterBody3D where TStats : Life
                 }
             }
 
-            if (IsDead) return;
-
             if (i < damages.Length - 1)
             {
                 await ToSignal(GetTree().CreateTimer(ComboHitInterval), SceneTreeTimer.SignalName.Timeout);
-                if (IsDead) return;
             }
         }
 
-        IsBusy = true;
-        GetTree().CreateTimer(HitBusyDuration).Timeout += () => IsBusy = false;
+        if (!IsDead)
+        {
+            IsBusy = true;
+            GetTree().CreateTimer(HitBusyDuration).Timeout += () => IsBusy = false;
+        }
     }
 
     // public virtual void HealHp(int amount)
