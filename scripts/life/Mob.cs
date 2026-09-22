@@ -61,9 +61,9 @@ public abstract partial class Mob : Life<MobStats>
         MobData = data;
     }
 
-    public override void TakeDamage(int[] damages, Vector3 hitSourcePosition, bool isCritical = false, string subText = "")
+    public override void TakeDamage(int[] damages, Vector3 hitSourcePosition, bool[] criticals, string subText = "")
     {
-        base.TakeDamage(damages, hitSourcePosition, isCritical, subText);
+        base.TakeDamage(damages, hitSourcePosition, criticals, subText);
 
         if (IsDead) return;
 

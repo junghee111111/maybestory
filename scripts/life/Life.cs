@@ -27,7 +27,7 @@ public abstract partial class Life<TStats> : CharacterBody3D where TStats : Life
     protected bool IsBusy = false;
 
     protected TStats Stats;
-    private const float ComboHitInterval = 0.03f;
+    private const float ComboHitInterval = 0.05f;
 
     public int AttackPower => Stats?.AttackPower ?? 0;
 
@@ -44,21 +44,22 @@ public abstract partial class Life<TStats> : CharacterBody3D where TStats : Life
     }
 
     public void TakeDamage(int damage, Vector3 hitSourcePosition, bool isCritical = false, string subText = "")
-        => TakeDamage(new[] { damage }, hitSourcePosition, isCritical, subText);
+        => TakeDamage(new[] { damage }, hitSourcePosition, new[] { isCritical }, subText);
 
-    // damages 배열의 각 원소를 ComboHitInterval 간격으로 순차 적용하며 그때마다 DamageIndicator를 띄운다.
-    public virtual void TakeDamage(int[] damages, Vector3 hitSourcePosition, bool isCritical = false, string subText = "")
+    // damages/criticals 배열의 각 원소를 ComboHitInterval 간격으로 순차 적용하며 그때마다 DamageIndicator를 띄운다.
+    public virtual void TakeDamage(int[] damages, Vector3 hitSourcePosition, bool[] criticals, string subText = "")
     {
         if (!IsAttackable || IsDead || Stats == null || IsBusy || damages == null || damages.Length == 0) return;
 
-        ApplyDamageSequence(damages, hitSourcePosition, isCritical, subText);
+        ApplyDamageSequence(damages, hitSourcePosition, criticals, subText);
     }
 
-    private async void ApplyDamageSequence(int[] damages, Vector3 hitSourcePosition, bool isCritical, string subText)
+    private async void ApplyDamageSequence(int[] damages, Vector3 hitSourcePosition, bool[] criticals, string subText)
     {
         for (int i = 0; i < damages.Length; i++)
         {
             int actualDamage = Stats.TakeDamage(damages[i]);
+            bool isCritical = criticals != null && i < criticals.Length && criticals[i];
             DamageIndicator.Spawn(GetTree().CurrentScene, GlobalPosition + DamageIndicatorOffset, actualDamage, isCritical, subText);
 
             // 즉사 타격이어도 넉백은 적용되어야 하므로 IsDead 체크보다 먼저 계산한다. (넉백은 최초 타격 기준 1회만 적용)

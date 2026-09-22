@@ -222,12 +222,12 @@ public partial class SkillManager : Node
         foreach (Mob target in targets)
         {
             var damages = new int[attackCount];
-            bool anyCritical = false;
+            var criticals = new bool[attackCount];
             for (int i = 0; i < attackCount; i++)
             {
                 (int dmg, bool isCritical) = CalculateDamage(skill, level);
                 damages[i] = dmg;
-                anyCritical |= isCritical;
+                criticals[i] = isCritical;
             }
 
             if (skill.HitVfxScene != null)
@@ -238,7 +238,7 @@ public partial class SkillManager : Node
                 vfx.GlobalPosition = target.GlobalPosition + skill.HitVfxTargetOffset;
             }
 
-            target.TakeDamage(damages, _player.GlobalPosition, anyCritical, "");
+            target.TakeDamage(damages, _player.GlobalPosition, criticals, "");
         }
     }
 

@@ -87,9 +87,9 @@ public partial class Player : Life<PlayerStats>
 		TakeDamage(mob.AttackPower, mob.GlobalPosition);
 	}
 
-	public override void TakeDamage(int[] damages, Vector3 hitSourcePosition, bool isCritical = false, string subText = "")
+	public override void TakeDamage(int[] damages, Vector3 hitSourcePosition, bool[] criticals, string subText = "")
 	{
-		base.TakeDamage(damages, hitSourcePosition, isCritical, subText);
+		base.TakeDamage(damages, hitSourcePosition, criticals, subText);
 
 		// Busy 애니메이션이 공격 애니메이션을 가로채면 animation_finished가 발생하지 않아
 		// _isAttacking이 계속 true로 남으므로 여기서 직접 풀어준다.

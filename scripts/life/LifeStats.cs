@@ -36,13 +36,15 @@ public partial class LifeStats : Node
     public virtual int TakeDamage(int damage)
     {
         int actualDamage = Mathf.Max(1, damage - Defense);
-        CurrentHp = Mathf.Max(0, CurrentHp - actualDamage);
 
-        OnHpChanged?.Invoke();
-
-        if (CurrentHp <= 0)
+        if (CurrentHp > 0)
         {
-            OnDied?.Invoke();
+            CurrentHp = Mathf.Max(0, CurrentHp - actualDamage);
+            OnHpChanged?.Invoke();
+            if (CurrentHp <= 0)
+            {
+                OnDied?.Invoke();
+            }
         }
 
         return actualDamage;
