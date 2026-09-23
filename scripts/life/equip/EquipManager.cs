@@ -11,6 +11,12 @@ public partial class EquipManager : Node
 
 	[ExportGroup("Maybe :: Current Equipment")]
 	[Export] public ItemData WeaponSlot;
+	[Export] public ItemData ShieldSlot;
+	[Export] public ItemData CapSlot;
+	[Export] public ItemData TopSlot;
+	[Export] public ItemData BottomSlot;
+	[Export] public ItemData ShoesSlot;
+	[Export] public ItemData EarringsSlot;
 
 	public event Action<EquipSlot, ItemData> OnEquipmentChanged;
 

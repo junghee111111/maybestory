@@ -32,6 +32,7 @@ public partial class PlayerStats : LifeStats
     {
         base._Ready();
         Instance = this;
+        MaxExp = GameManager.Instance?.GetMaxExp(Level) ?? MaxExp;
     }
 
     public void AddMoney(int amount)
@@ -60,12 +61,24 @@ public partial class PlayerStats : LifeStats
 
     public void AddExp(int amount)
     {
+        if (Level >= GameManager.MaxLevel) return; // 만렙에서는 경험치를 더 얻지 않는다.
+
         CurrentExp += amount;
-        while (CurrentExp >= MaxExp)
+
+        while (Level < GameManager.MaxLevel && MaxExp > 0 && CurrentExp >= MaxExp)
         {
-            CurrentExp -= MaxExp;
             LevelUp();
         }
+
+        OnExpChanged?.Invoke();
+    }
+
+    // 사망 시 (40 - Luk/50*100)% 만큼 현재 경험치를 차감한다.
+    public void ApplyDeathExpPenalty()
+    {
+        float lossPercent = Mathf.Clamp(40f - (Luk / 50f * 100f), 0f, 100f);
+        int loss = Mathf.RoundToInt(CurrentExp * (lossPercent / 100f));
+        CurrentExp = Mathf.Max(0, CurrentExp - loss);
         OnExpChanged?.Invoke();
     }
 
@@ -74,6 +87,7 @@ public partial class PlayerStats : LifeStats
         Level++;
         StatPoints += 5;
         SkillPoints += 3;
+        CurrentExp = 0;
 
         // 레벨업 시 HP/MP 증가 공식
         int hpGain = (int)GD.RandRange(12, 16);
@@ -84,7 +98,9 @@ public partial class PlayerStats : LifeStats
         CurrentHp = MaxHp;
         CurrentMp = MaxMp;
 
-        MaxExp = Mathf.RoundToInt(MaxExp * 1.25f);
+        MaxExp = GameManager.Instance?.GetMaxExp(Level) ?? MaxExp;
+        GameManager.Instance?.PlayLevelUpVfx((GetParent() as Node3D)?.GlobalPosition ?? Vector3.Zero);
+
         OnLevelUp?.Invoke(Level);
     }
 }

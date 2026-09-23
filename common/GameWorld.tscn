@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dvijbywig0qns" path="res://scripts/core/MapManager.cs" id="1_6uab5"]
 [ext_resource type="Script" uid="uid://dyfhca5teb8b6" path="res://scripts/core/KeyboardManager.cs" id="1_jvlke"]
+[ext_resource type="Script" path="res://scripts/core/GameManager.cs" id="1_gamemgr"]
 [ext_resource type="Script" path="res://scripts/core/WindowManager.cs" id="1_winmgr"]
 [ext_resource type="Script" path="res://scripts/core/InventoryManager.cs" id="1_invmgr"]
 [ext_resource type="Script" uid="uid://ray7pgjfjdxs" path="res://scripts/core/CameraController.cs" id="2_bp2gk"]
@@ -10,6 +11,9 @@
 [ext_resource type="PackedScene" uid="uid://u1cx757yqu5w" path="res://item/etc/coin.tscn" id="4_y0hbh"]
 
 [node name="GameWorld" type="Node3D" unique_id=1381227503]
+
+[node name="GameManager" type="Node" parent="." unique_id=845729015]
+script = ExtResource("1_gamemgr")
 
 [node name="KeyboardManager" type="Node" parent="." unique_id=496760227]
 script = ExtResource("1_jvlke")

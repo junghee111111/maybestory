@@ -161,7 +161,8 @@ public abstract partial class Mob : Life<MobStats>
         {
             return;
         }
-        GD.Print($"[Mob] 경험치 {MobData.RewardExp} 지급 및 드랍 아이템 생성");
+
+        PlayerStats.Instance?.AddExp(MobData.RewardExp);
 
         foreach (ItemDropData drop in MobData.DropItems)
         {

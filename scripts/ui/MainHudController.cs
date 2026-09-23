@@ -32,6 +32,7 @@ public partial class MainHudController : Node
 		{
 			_playerStats.OnStatsChanged += RefreshUI;
 			_playerStats.OnLevelUp += OnLevelUpEffect;
+			_playerStats.OnExpChanged += RefreshUI;
 			RefreshUI();
 		}
 		else
@@ -47,6 +48,7 @@ public partial class MainHudController : Node
 		{
 			_playerStats.OnStatsChanged -= RefreshUI;
 			_playerStats.OnLevelUp -= OnLevelUpEffect;
+			_playerStats.OnExpChanged -= RefreshUI;
 		}
 	}
 	// Called every frame. 'delta' is the elapsed time since the previous frame.

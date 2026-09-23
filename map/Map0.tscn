@@ -149,10 +149,10 @@ script = ExtResource("2_ogk54")
 TargetMonsterData = ExtResource("3_6hmbn")
 
 [node name="MinBound" type="Marker3D" parent="CamBounds" parent_id_path=PackedInt32Array(1934448944) index="0" unique_id=1673598433]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.939396, -24.03762, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.131447, -3.9062347, 0)
 
 [node name="MaxBound" type="Marker3D" parent="CamBounds" parent_id_path=PackedInt32Array(1934448944) index="1" unique_id=1950165414]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24.098509, 23.925898, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.751928, 8.507545, 0)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." index="7" unique_id=875615377]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 7, 0)

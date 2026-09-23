@@ -256,5 +256,6 @@ public partial class Player : Life<PlayerStats>
 		_isAttacking = false;
 		SetPhysicsProcess(false);
 		PlayAnimationIfNotPlaying("Die");
+		Stats?.ApplyDeathExpPenalty();
 	}
 }
