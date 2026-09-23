@@ -7,7 +7,7 @@ public partial class EquipManager : Node
 	// BaseChar's root is a plain Node3D; the actual skeleton/bones live somewhere inside it.
 	[Export] public NodePath SkeletonPath = "BaseChar";
 	// Weapons are held in the left hand, so the visual is attached to this bone.
-	[Export] public string LeftHandBoneName = "mixamorig_LeftHand";
+	[Export] public string LeftHandBoneName = "Hand.L";
 
 	[ExportGroup("Maybe :: Current Equipment")]
 	[Export] public ItemData WeaponSlot;
