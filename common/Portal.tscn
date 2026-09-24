@@ -1,14 +1,97 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://cyadq71tlv68r"]
 
-[ext_resource type="Script" path="res://scripts/core/Portal.cs" id="1_portal"]
+[ext_resource type="Script" uid="uid://letq2wdteye8" path="res://scripts/core/Portal.cs" id="1_portal"]
+[ext_resource type="Shader" uid="uid://bckunr1evdnv6" path="res://shader/PortalShader.tres" id="2_sh5sc"]
+[ext_resource type="Texture2D" uid="uid://d0klufptiebfe" path="res://shader/base/T_VFX_Flare_16.PNG" id="3_goghi"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_portal"]
 size = Vector3(2, 3, 2)
 
-[node name="Portal" type="Area3D"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_qw2s8"]
+render_priority = 0
+shader = ExtResource("2_sh5sc")
+shader_parameter/PortalIntensity = 7.0
+shader_parameter/PortalColor = Color(0, 0.627451, 0.99215686, 1)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_gh32t"]
+size = Vector2(3.7, 3.7)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_folei"]
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+albedo_color = Color(0.16097337, 1.476129, 2.47168, 1)
+albedo_texture = ExtResource("3_goghi")
+use_particle_trails = true
+
+[sub_resource type="Curve" id="Curve_73inv"]
+_limits = [-360.0, 360.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_iu0io"]
+curve = SubResource("Curve_73inv")
+
+[sub_resource type="Curve" id="Curve_wpl17"]
+_limits = [-2.0, 2.0, 0.0, 1.0]
+_data = [Vector2(0, 0.015543938), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_228k2"]
+_limits = [-2.0, 2.0, 0.0, 1.0]
+_data = [Vector2(0, 0.02072525), 0.0, 0.0, 0, 0, Vector2(1, 0.015543938), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_goghi"]
+_limits = [-2.0, 2.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, -0.0801449, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_5oyec"]
+curve_x = SubResource("Curve_wpl17")
+curve_y = SubResource("Curve_228k2")
+curve_z = SubResource("Curve_goghi")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_gh32t"]
+particle_flag_align_y = true
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 0.0
+emission_ring_radius = 1.8
+emission_ring_inner_radius = 1.6
+emission_ring_cone_angle = 90.0
+angle_curve = SubResource("CurveTexture_iu0io")
+orbit_velocity_min = 0.2
+orbit_velocity_max = 0.3
+orbit_velocity_curve = SubResource("CurveXYZTexture_5oyec")
+radial_velocity_min = 0.19997764
+radial_velocity_max = 0.49997765
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_qw2s8"]
+size = 0.2
+
+[node name="Portal" type="Area3D" unique_id=258503562]
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("1_portal")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=257091879]
 shape = SubResource("BoxShape3D_portal")
+
+[node name="vfx" type="Node3D" parent="." unique_id=654817707]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="vfx" unique_id=1338538424]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_qw2s8")
+mesh = SubResource("PlaneMesh_gh32t")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="vfx" unique_id=2054917751]
+material_override = SubResource("StandardMaterial3D_folei")
+amount = 150
+transform_align = 1
+transform_align_channel_filter = 1
+trail_enabled = true
+trail_lifetime = 0.5
+process_material = SubResource("ParticleProcessMaterial_gh32t")
+draw_pass_1 = SubResource("RibbonTrailMesh_qw2s8")

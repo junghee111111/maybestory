@@ -9,7 +9,7 @@ height = 1.6008301
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mti6b"]
 height = 1.5917969
 
-[node name="BaseMobSmall" type="CharacterBody3D" unique_id=1769357514]
+[node name="BaseMobSmall2" type="CharacterBody3D" unique_id=1769357514]
 collision_layer = 4
 collision_mask = 9
 script = ExtResource("1_1mf86")

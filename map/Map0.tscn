@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://des8lwr1hv5ni"]
 
 [ext_resource type="PackedScene" uid="uid://dpwhlxqq6j0ps" path="res://common/BaseMap.tscn" id="1_v233w"]
-[ext_resource type="PackedScene" path="res://common/Teleporter.tscn" id="2_bafel"]
+[ext_resource type="PackedScene" uid="uid://mcvwkc185xhn" path="res://common/Teleporter.tscn" id="2_bafel"]
+[ext_resource type="PackedScene" uid="uid://cyadq71tlv68r" path="res://common/Portal.tscn" id="2_lp7gj"]
 [ext_resource type="Script" uid="uid://be2mpba7kf4jv" path="res://scripts/core/MobSpawner.cs" id="2_ogk54"]
 [ext_resource type="Resource" uid="uid://btwt2ttn73gcb" path="res://data/mob/Mob0.tres" id="3_6hmbn"]
 [ext_resource type="Environment" uid="uid://dlo4d1tui6x2k" path="res://demo/assets/Environment.tres" id="4_6hmbn"]
@@ -101,12 +102,15 @@ shape = SubResource("BoxShape3D_mm1bc")
 [node name="Default" type="Marker3D" parent="Spawns" parent_id_path=PackedInt32Array(1153266662) index="0" unique_id=1731500046]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9680643, 0)
 
-[node name="Teleporter" parent="Portals" parent_id_path=PackedInt32Array(542939105) index="0" unique_id=474562718 instance=ExtResource("2_bafel")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.52157, 0, -1)
+[node name="Portal" parent="Portals" parent_id_path=PackedInt32Array(542939105) index="0" unique_id=258503562 instance=ExtResource("2_lp7gj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.478237, 4.4485683, 0)
+
+[node name="Teleporter" parent="Portals" parent_id_path=PackedInt32Array(542939105) index="1" unique_id=474562718 instance=ExtResource("2_bafel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.738952, 2.233015, -0.065630436)
 TargetPosition = Vector3(0, 0, -20)
 
-[node name="Teleporter2" parent="Portals" parent_id_path=PackedInt32Array(542939105) index="1" unique_id=127679407 instance=ExtResource("2_bafel")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.14086, 0, -21.690594)
+[node name="Teleporter2" parent="Portals" parent_id_path=PackedInt32Array(542939105) index="2" unique_id=127679407 instance=ExtResource("2_bafel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.632391, 2.1538186, -20.05545)
 
 [node name="Node3D" type="Node3D" parent="MobSpawners" parent_id_path=PackedInt32Array(554641987) index="0" unique_id=1088224444]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16.324192, 4.5141997, 0)

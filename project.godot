@@ -19,7 +19,7 @@ config/name_localized={
 config/version="1.11"
 run/main_scene="uid://dw72i24hj5mtw"
 config/features=PackedStringArray("4.7", "C#", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="res://shader/icon.svg"
 
 [autoload]
 

@@ -1,14 +1,82 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://mcvwkc185xhn"]
 
-[ext_resource type="Script" path="res://scripts/core/Teleporter.cs" id="1_teleporter"]
+[ext_resource type="Script" uid="uid://bk0q3g7yv5slo" path="res://scripts/core/Teleporter.cs" id="1_teleporter"]
+[ext_resource type="Texture2D" uid="uid://d0klufptiebfe" path="res://shader/base/T_VFX_Flare_16.PNG" id="2_xh3gm"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_teleporter"]
 size = Vector3(2, 3, 2)
 
-[node name="Teleporter" type="Area3D"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jfaih"]
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+albedo_color = Color(1.3272918, 1.9320153, 0.93499386, 1)
+albedo_texture = ExtResource("2_xh3gm")
+use_particle_trails = true
+
+[sub_resource type="Curve" id="Curve_h6sik"]
+_limits = [-360.0, 360.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ga6ob"]
+curve = SubResource("Curve_h6sik")
+
+[sub_resource type="Curve" id="Curve_xhhfd"]
+_limits = [-2.0, 2.0, 0.0, 1.0]
+_data = [Vector2(0.002372481, 0.015543938), 0.0, 0.0, 0, 0, Vector2(1, 0.015543938), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_1m0go"]
+_limits = [-2.0, 2.0, 0.0, 1.0]
+_data = [Vector2(0, -0.025906801), 0.0, 0.0, 0, 0, Vector2(1, -0.0051813126), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Curve" id="Curve_8rlmd"]
+_limits = [-2.0, 2.0, 0.0, 1.0]
+_data = [Vector2(0, 1), 0.0, -0.0801449, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveXYZTexture" id="CurveXYZTexture_bch6e"]
+curve_x = SubResource("Curve_xhhfd")
+curve_y = SubResource("Curve_1m0go")
+curve_z = SubResource("Curve_8rlmd")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_obk41"]
+particle_flag_align_y = true
+emission_shape = 6
+emission_ring_axis = Vector3(0, 0, 1)
+emission_ring_height = 0.0
+emission_ring_radius = 1.5
+emission_ring_inner_radius = 0.5
+emission_ring_cone_angle = 90.0
+angle_curve = SubResource("CurveTexture_ga6ob")
+orbit_velocity_min = 0.2
+orbit_velocity_max = 0.3
+orbit_velocity_curve = SubResource("CurveXYZTexture_bch6e")
+radial_velocity_min = 0.19997764
+radial_velocity_max = 0.49997765
+gravity = Vector3(0, 0, 0)
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_8bk1w"]
+size = 0.2
+
+[node name="Teleporter" type="Area3D" unique_id=1387957070]
 collision_layer = 0
 collision_mask = 2
 script = ExtResource("1_teleporter")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1965066738]
 shape = SubResource("BoxShape3D_teleporter")
+
+[node name="vfx" type="Node3D" parent="." unique_id=132293121]
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="vfx" unique_id=623879695]
+material_override = SubResource("StandardMaterial3D_jfaih")
+amount = 150
+transform_align = 1
+transform_align_channel_filter = 1
+trail_enabled = true
+trail_lifetime = 0.5
+process_material = SubResource("ParticleProcessMaterial_obk41")
+draw_pass_1 = SubResource("RibbonTrailMesh_8bk1w")
