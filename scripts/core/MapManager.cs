@@ -8,6 +8,8 @@ public partial class MapManager : Node
 	// 현재 맵의 CamBounds(MinBound=왼쪽아래, MaxBound=오른쪽위). 카메라 클램프 및 캐릭터/몹 이동 제한에 사용.
 	public Vector3 MinBound { get; private set; }
 	public Vector3 MaxBound { get; private set; }
+	// 저장/불러오기용: 현재 로드된 맵 씬의 리소스 경로.
+	public string CurrentMapScenePath { get; private set; }
 
 	[Export] public NodePath MapContainerPath = "../MapContainer";
 	[Export] public NodePath PlayerPath = "../LifeContainer/Player";
@@ -50,6 +52,7 @@ public partial class MapManager : Node
 
 		_currentMapInstance = mapScene.Instantiate<BaseMap>();
 		_mapContainer.AddChild(_currentMapInstance);
+		CurrentMapScenePath = mapScene.ResourcePath;
 
 		Vector3 spawnPos = spawnAtPortal
 			? _currentMapInstance.GetPortalPosition(spawnPointName)

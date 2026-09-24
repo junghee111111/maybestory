@@ -1,0 +1,37 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" uid="uid://dpwhlxqq6j0ps" path="res://common/BaseMap.tscn" id="1_v233w"]
+[ext_resource type="PackedScene" uid="uid://cyadq71tlv68r" path="res://common/Portal.tscn" id="2_lp7gj"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_map1"]
+size = Vector3(30, 1, 5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_map1"]
+size = Vector3(30, 1, 5)
+
+[node name="BaseMap" instance=ExtResource("1_v233w")]
+MapId = "Map1"
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Platforms" parent_id_path=PackedInt32Array(1182424747) index="0"]
+collision_mask = 0
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Platforms/StaticBody3D" index="0"]
+mesh = SubResource("BoxMesh_map1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Platforms/StaticBody3D" index="1"]
+shape = SubResource("BoxShape3D_map1")
+
+[node name="Default" type="Marker3D" parent="Spawns" parent_id_path=PackedInt32Array(1153266662) index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Portal" parent="Portals" parent_id_path=PackedInt32Array(542939105) index="0" instance=ExtResource("2_lp7gj")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12, 1.5, 0)
+PortalId = "Map0Portal"
+NextMapScenePath = "res://map/Map0.tscn"
+NextMapPortalId = "Portal0"
+
+[node name="MinBound" type="Marker3D" parent="CamBounds" parent_id_path=PackedInt32Array(1934448944) index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, -2, 0)
+
+[node name="MaxBound" type="Marker3D" parent="CamBounds" parent_id_path=PackedInt32Array(1934448944) index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 8, 0)

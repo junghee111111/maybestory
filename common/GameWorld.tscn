@@ -9,8 +9,10 @@
 [ext_resource type="PackedScene" uid="uid://db0d5qldeejq5" path="res://life/character/Player.tscn" id="3_bp2gk"]
 [ext_resource type="PackedScene" uid="uid://bdpbrf1dhgwxh" path="res://ui/MainHUD.tscn" id="4_uecoe"]
 [ext_resource type="PackedScene" uid="uid://u1cx757yqu5w" path="res://item/etc/coin.tscn" id="4_y0hbh"]
+[ext_resource type="Script" path="res://scripts/core/GameWorldBootstrap.cs" id="5_bootstrap"]
 
 [node name="GameWorld" type="Node3D" unique_id=1381227503]
+script = ExtResource("5_bootstrap")
 
 [node name="GameManager" type="Node" parent="." unique_id=845729015]
 script = ExtResource("1_gamemgr")

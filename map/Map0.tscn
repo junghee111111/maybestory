@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://cyadq71tlv68r" path="res://common/Portal.tscn" id="2_lp7gj"]
 [ext_resource type="Script" uid="uid://be2mpba7kf4jv" path="res://scripts/core/MobSpawner.cs" id="2_ogk54"]
 [ext_resource type="Resource" uid="uid://btwt2ttn73gcb" path="res://data/mob/Mob0.tres" id="3_6hmbn"]
+[ext_resource type="Resource" path="res://data/mob/Mob1.tres" id="3_mid01"]
+[ext_resource type="Resource" path="res://data/mob/Mob2.tres" id="3_lrg01"]
 [ext_resource type="Environment" uid="uid://dlo4d1tui6x2k" path="res://demo/assets/Environment.tres" id="4_6hmbn"]
 [ext_resource type="CameraAttributesPractical" uid="uid://c41dvxjh8vfeb" path="res://demo/assets/CameraAttributes.tres" id="5_pooee"]
 
@@ -104,6 +106,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.9680643, 0)
 
 [node name="Portal" parent="Portals" parent_id_path=PackedInt32Array(542939105) index="0" unique_id=258503562 instance=ExtResource("2_lp7gj")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.478237, 4.4485683, 0)
+NextMapScenePath = "res://map/Map1.tscn"
+NextMapPortalId = "Map0Portal"
 
 [node name="Teleporter" parent="Portals" parent_id_path=PackedInt32Array(542939105) index="1" unique_id=474562718 instance=ExtResource("2_bafel")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.738952, 2.233015, -0.065630436)
@@ -151,6 +155,18 @@ TargetMonsterData = ExtResource("3_6hmbn")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.482357, 3.5042653, -20)
 script = ExtResource("2_ogk54")
 TargetMonsterData = ExtResource("3_6hmbn")
+
+[node name="Node3D9" type="Node3D" parent="MobSpawners" parent_id_path=PackedInt32Array(554641987) index="8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4843943, 0)
+script = ExtResource("2_ogk54")
+TargetMonsterData = ExtResource("3_mid01")
+MaxMonsters = 1
+
+[node name="Node3D10" type="Node3D" parent="MobSpawners" parent_id_path=PackedInt32Array(554641987) index="9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10, 1.4843943, 0)
+script = ExtResource("2_ogk54")
+TargetMonsterData = ExtResource("3_lrg01")
+MaxMonsters = 1
 
 [node name="MinBound" type="Marker3D" parent="CamBounds" parent_id_path=PackedInt32Array(1934448944) index="0" unique_id=1673598433]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.131447, -3.9062347, 0)

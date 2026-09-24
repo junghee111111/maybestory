@@ -1,0 +1,56 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" uid="uid://b6apbywqek6u6" path="res://scripts/life/MobLarge.cs" id="1_lrg01"]
+[ext_resource type="Script" uid="uid://chrha5elc00f" path="res://scripts/life/MobStats.cs" id="2_stats"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_body"]
+radius = 0.85
+height = 2.72
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_hurt"]
+radius = 0.85
+height = 2.71
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_head"]
+radius = 0.55
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_leg"]
+radius = 0.7
+height = 0.8
+
+[node name="BaseMobLarge" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 9
+script = ExtResource("1_lrg01")
+IsAttackable = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.36, 0)
+shape = SubResource("CapsuleShape3D_body")
+
+[node name="MobStats" type="Node3D" parent="."]
+script = ExtResource("2_stats")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.355, 0)
+shape = SubResource("CapsuleShape3D_hurt")
+
+[node name="Head" type="Area3D" parent="."]
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Head"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.75, 0)
+shape = SubResource("SphereShape3D_head")
+
+[node name="Leg" type="Area3D" parent="."]
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Leg"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4, 0)
+shape = SubResource("CapsuleShape3D_leg")

@@ -80,6 +80,23 @@ public partial class EquipManager : Node
 		return _equipped.TryGetValue(slot, out var item) ? item : null;
 	}
 
+	public IReadOnlyDictionary<EquipSlot, ItemData> GetAllEquipped() => _equipped;
+
+	// 저장 파일 불러오기 전용: PlayerStats에 이미 장비 보너스가 반영된 값을 저장/복원하므로
+	// 여기서는 스탯 보너스를 다시 더하지 않고 장착 상태(및 무기 비주얼)만 복원한다.
+	public void RestoreEquipped(EquipSlot slot, ItemData item)
+	{
+		if (item == null) return;
+
+		_equipped[slot] = item;
+		if (slot == EquipSlot.Weapon)
+		{
+			AttachWeaponVisual(item);
+		}
+
+		OnEquipmentChanged?.Invoke(slot, item);
+	}
+
 	public bool Equip(ItemData item)
 	{
 		if (item == null || item.Type != ItemType.Equipment || item.Slot == EquipSlot.None)

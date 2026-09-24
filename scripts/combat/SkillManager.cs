@@ -47,6 +47,19 @@ public partial class SkillManager : Node
         return _skillDataDict.TryGetValue(skillId, out var data) ? data : null;
     }
 
+    // 저장/복원용: 현재 할당된 스킬 포인트를 모두 읽어온다.
+    public IReadOnlyDictionary<string, int> GetAllAllocatedPoints() => _allocatedPoints;
+
+    // 저장 파일을 불러옴 시 포인트 소모 검증 없이 값을 그대로 덩어씁은다.
+    public void RestoreAllocatedPoints(IReadOnlyDictionary<string, int> allocatedPoints)
+    {
+        if (allocatedPoints == null) return;
+        foreach (var (skillId, level) in allocatedPoints)
+        {
+            _allocatedPoints[skillId] = level;
+        }
+    }
+
     public override void _PhysicsProcess(double delta)
     {
         float dt = (float)delta;
@@ -214,18 +227,18 @@ public partial class SkillManager : Node
             await ToSignal(GetTree().CreateTimer(skill.PreDelay), SceneTreeTimer.SignalName.Timeout);
         }
 
-        List<Mob> targets = skill.UseAttackRangeBasedOnWeaponMesh
+        List<(Mob Mob, string Part)> targets = skill.UseAttackRangeBasedOnWeaponMesh
             ? FindTargetsInWeaponHitbox(skill)
             : FindTargetsInVirtualHitbox(skill);
 
         int attackCount = Mathf.Max(1, skill.AttackCount);
-        foreach (Mob target in targets)
+        foreach (var (target, part) in targets)
         {
             var damages = new int[attackCount];
             var criticals = new bool[attackCount];
             for (int i = 0; i < attackCount; i++)
             {
-                (int dmg, bool isCritical) = CalculateDamage(skill, level);
+                (int dmg, bool isCritical) = CalculateDamage(skill, level, isHeadshot: part == "Head");
                 damages[i] = dmg;
                 criticals[i] = isCritical;
             }
@@ -238,37 +251,47 @@ public partial class SkillManager : Node
                 vfx.GlobalPosition = target.GlobalPosition + skill.HitVfxTargetOffset;
             }
 
-            target.TakeDamage(damages, _player.GlobalPosition, criticals, "");
+            target.TakePartDamage(part, damages, _player.GlobalPosition, criticals, "");
         }
     }
 
-    // 무기(Weapon/Area3D/HitArea)와 겹쳐진 몬스터를 찾는다.
-    private List<Mob> FindTargetsInWeaponHitbox(SkillData skill)
+    // 몬스터당 가장 우선순위 높은 히트박스 부위(Head > Leg > 몸통)를 골라준다.
+    private static string PickBestPart(string a, string b)
     {
-        var found = new HashSet<Mob>();
+        if (a == "Head" || b == "Head") return "Head";
+        if (a == "Leg" || b == "Leg") return "Leg";
+        return "Body";
+    }
+
+    // 무기(Weapon/Area3D/HitArea)와 겹쳐진 몬스터를 찾는다. 부위별 Area3D(Head/Leg/Body)가 있으면 맞은 부위도 함께 반환한다.
+    private List<(Mob Mob, string Part)> FindTargetsInWeaponHitbox(SkillData skill)
+    {
+        var found = new Dictionary<Mob, string>();
 
         Area3D hitArea = _equipManager?.WeaponHitArea;
-        if (hitArea == null) return new List<Mob>();
+        if (hitArea == null) return new List<(Mob, string)>();
 
         foreach (Area3D area in hitArea.GetOverlappingAreas())
         {
             if (area.GetParent() is not Mob mob) continue;
-            found.Add(mob);
+            string areaName = area.Name.ToString();
+            string part = areaName is "Head" or "Leg" ? areaName : "Body";
+            found[mob] = found.TryGetValue(mob, out string existing) ? PickBestPart(existing, part) : part;
         }
 
-        var targets = new List<Mob>();
-        foreach (Mob mob in found)
+        var targets = new List<(Mob, string)>();
+        foreach (var (mob, part) in found)
         {
             if (targets.Count >= skill.TargetCount) break;
-            targets.Add(mob);
+            targets.Add((mob, part));
         }
         return targets;
     }
 
     // AttackRangeW/H/D(장착 무기의 AttackRange 배율 적용) 크기의 가상 박스(플레이어 위치 + AttackRangeOffset)로 겹치는 대상을 찾는다.
-    private List<Mob> FindTargetsInVirtualHitbox(SkillData skill)
+    private List<(Mob Mob, string Part)> FindTargetsInVirtualHitbox(SkillData skill)
     {
-        var targets = new List<Mob>();
+        var targets = new List<(Mob Mob, string Part)>();
 
         float weaponRangeMultiplier = _equipManager?.GetEquipped(EquipSlot.Weapon)?.AttackRange ?? 1.0f;
         var size = new Vector3(skill.AttackRangeW * weaponRangeMultiplier, skill.AttackRangeH, skill.AttackRangeD);
@@ -290,9 +313,10 @@ public partial class SkillManager : Node
         foreach (var hit in spaceState.IntersectShape(bodyQuery))
         {
             if (targets.Count >= skill.TargetCount) break;
-            if (hit["collider"].As<Node>() is Mob mob && !targets.Contains(mob))
+            if (hit["collider"].As<Node>() is Mob mob && !targets.Exists(t => t.Mob == mob))
             {
-                targets.Add(mob);
+                // 가상 박스는 뫁통 물리 바디만 감지하므로 항상 "Body"로 처리한다.
+                targets.Add((mob, "Body"));
             }
         }
 

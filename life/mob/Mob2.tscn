@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://life/mob/base/BaseMobLarge.tscn" id="1_lrg01"]
+[ext_resource type="PackedScene" uid="uid://uhvcjwj1k6dr" path="res://models/mob/Mob0.glb" id="2_model"]
+
+[node name="BaseMobLarge" instance=ExtResource("1_lrg01")]
+StatsPath = NodePath("MobStats")
+DamageIndicatorOffset = Vector3(0, 1.6, 0)
+
+[node name="Model" parent="." index="1" instance=ExtResource("2_model")]
+transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 0, 0, 0)

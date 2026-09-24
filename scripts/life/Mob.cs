@@ -61,6 +61,25 @@ public abstract partial class Mob : Life<MobStats>
         MobData = data;
     }
 
+    // 부위별(Head/Leg/Body) 히트박스로부터 들어온 대미지에 배율을 적용한다. 기본형(단일 히트박스)은 배율 없음.
+    protected virtual float GetPartDamageMultiplier(string partName) => 1.0f;
+
+    public void TakePartDamage(string partName, int[] damages, Vector3 hitSourcePosition, bool[] criticals, string subText = "")
+    {
+        float multiplier = GetPartDamageMultiplier(partName);
+        if (!Mathf.IsEqualApprox(multiplier, 1.0f))
+        {
+            var scaled = new int[damages.Length];
+            for (int i = 0; i < damages.Length; i++)
+            {
+                scaled[i] = Mathf.RoundToInt(damages[i] * multiplier);
+            }
+            damages = scaled;
+        }
+
+        TakeDamage(damages, hitSourcePosition, criticals, subText);
+    }
+
     public override void TakeDamage(int[] damages, Vector3 hitSourcePosition, bool[] criticals, string subText = "")
     {
         base.TakeDamage(damages, hitSourcePosition, criticals, subText);
