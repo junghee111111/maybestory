@@ -22,6 +22,11 @@ public partial class MainHudController : Node
 
 	private PlayerStats _playerStats;
 
+	private const float BarTweenDuration = 1.0f;
+	private Tween _hpTween;
+	private Tween _mpTween;
+	private Tween _expTween;
+
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
@@ -31,8 +36,10 @@ public partial class MainHudController : Node
 		if (_playerStats != null)
 		{
 			_playerStats.OnStatsChanged += RefreshUI;
-			_playerStats.OnLevelUp += OnLevelUpEffect;
-			_playerStats.OnExpChanged += RefreshUI;
+			_playerStats.OnLevelUp += RefreshUI;
+			_playerStats.OnHpChanged += RefreshHpBar;
+			_playerStats.OnMpChanged += RefreshMpBar;
+			_playerStats.OnExpChanged += RefreshExpBar;
 			RefreshUI();
 		}
 		else
@@ -47,13 +54,72 @@ public partial class MainHudController : Node
 		if (_playerStats != null)
 		{
 			_playerStats.OnStatsChanged -= RefreshUI;
-			_playerStats.OnLevelUp -= OnLevelUpEffect;
-			_playerStats.OnExpChanged -= RefreshUI;
+			_playerStats.OnLevelUp -= RefreshUI;
+			_playerStats.OnHpChanged -= RefreshHpBar;
+			_playerStats.OnMpChanged -= RefreshMpBar;
+			_playerStats.OnExpChanged -= RefreshExpBar;
 		}
 	}
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+	}
+
+	private void RefreshHpBar()
+	{
+		// HP 바 & 텍스트
+		if (HpBar != null)
+		{
+			HpBar.MaxValue = _playerStats.MaxHp;
+			_hpTween = AnimateBarValue(HpBar, _hpTween, _playerStats.CurrentHp);
+		}
+		if (HpText != null)
+		{
+			HpText.Text = $"{_playerStats.CurrentHp} / {_playerStats.MaxHp}";
+		}
+	}
+
+	private void RefreshMpBar()
+	{
+		// MP 바 & 텍스트
+		if (MpBar != null)
+		{
+			MpBar.MaxValue = _playerStats.MaxMp;
+			_mpTween = AnimateBarValue(MpBar, _mpTween, _playerStats.CurrentMp);
+		}
+		if (MpText != null)
+		{
+			MpText.Text = $"{_playerStats.CurrentMp} / {_playerStats.MaxMp}";
+		}
+	}
+
+	private void RefreshExpBar()
+	{
+		// EXP 바 & 텍스트
+		if (ExpBar != null)
+		{
+			ExpBar.MaxValue = _playerStats.MaxExp;
+			_expTween = AnimateBarValue(ExpBar, _expTween, _playerStats.CurrentExp);
+		}
+
+		if (ExpText != null)
+		{
+			float expPercent = _playerStats.MaxExp > 0
+				? (float)_playerStats.CurrentExp / _playerStats.MaxExp * 100.0f
+				: 0.0f;
+			ExpText.Text = $"{_playerStats.CurrentExp} / {_playerStats.MaxExp} ({expPercent:F2}%)";
+		}
+	}
+
+	// 진행 중이던 트윈을 정리하고 EaseOut으로 바 값을 목표치까지 부드럽게 움직인다.
+	private Tween AnimateBarValue(TextureProgressBar bar, Tween previousTween, float targetValue)
+	{
+		previousTween?.Kill();
+
+		Tween tween = CreateTween();
+		tween.SetTrans(Tween.TransitionType.Quad).SetEase(Tween.EaseType.Out);
+		tween.TweenProperty(bar, "value", targetValue, BarTweenDuration);
+		return tween;
 	}
 
 	private void RefreshUI()
@@ -65,44 +131,8 @@ public partial class MainHudController : Node
 		if (JobLabel != null) JobLabel.Text = $"{_playerStats.CurrentJob}";
 		if (NameLabel != null) NameLabel.Text = $"{_playerStats.LifeName}";
 
-		// HP 바 & 텍스트
-		if (HpBar != null)
-		{
-			HpBar.MaxValue = _playerStats.MaxHp;
-			HpBar.Value = _playerStats.CurrentHp;
-		}
-		if (HpText != null)
-		{
-			HpText.Text = $"{_playerStats.CurrentHp} / {_playerStats.MaxHp}";
-		}
-
-		// MP 바 & 텍스트
-		if (MpBar != null)
-		{
-			MpBar.MaxValue = _playerStats.MaxMp;
-			MpBar.Value = _playerStats.CurrentMp;
-		}
-		if (MpText != null)
-		{
-			MpText.Text = $"{_playerStats.CurrentMp} / {_playerStats.MaxMp}";
-		}
-
-		// EXP 바 & 텍스트
-		if (ExpBar != null)
-		{
-			ExpBar.MaxValue = _playerStats.MaxExp;
-			ExpBar.Value = _playerStats.CurrentExp;
-		}
-		if (ExpText != null)
-		{
-			float expPercent = _playerStats.MaxExp > 0
-				? ((float)_playerStats.CurrentExp / _playerStats.MaxExp) * 100.0f
-				: 0.0f;
-			ExpText.Text = $"{_playerStats.CurrentExp} / {_playerStats.MaxExp} ({expPercent:F2}%)";
-		}
-	}
-
-	private void OnLevelUpEffect(int newLevel)
-	{
+		RefreshHpBar();
+		RefreshMpBar();
+		RefreshExpBar();
 	}
 }

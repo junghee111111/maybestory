@@ -14,7 +14,7 @@ public partial class PlayerStats : LifeStats
 {
     public static PlayerStats Instance { get; private set; }
 
-    public event Action<int> OnLevelUp;
+    public event Action OnLevelUp;
     public event Action OnExpChanged;
     public event Action OnMoneyChanged;
 
@@ -101,6 +101,6 @@ public partial class PlayerStats : LifeStats
         MaxExp = GameManager.Instance?.GetMaxExp(Level) ?? MaxExp;
         GameManager.Instance?.PlayLevelUpVfx((GetParent() as Node3D)?.GlobalPosition ?? Vector3.Zero);
 
-        OnLevelUp?.Invoke(Level);
+        OnLevelUp?.Invoke();
     }
 }

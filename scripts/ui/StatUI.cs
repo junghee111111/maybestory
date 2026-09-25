@@ -66,7 +66,7 @@ public partial class StatUI : UIWindowPanel
 
     protected override void OnOpened() => Refresh();
 
-    private void OnLevelUp(int newLevel) => Refresh();
+    private void OnLevelUp() => Refresh();
 
     private void Allocate(StatKind kind)
     {

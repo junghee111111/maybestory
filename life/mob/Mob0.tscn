@@ -3,27 +3,19 @@
 [ext_resource type="PackedScene" uid="uid://bvg62f8hq0qwc" path="res://life/mob/base/BaseMobSmall.tscn" id="1_s8lw5"]
 [ext_resource type="PackedScene" uid="uid://uhvcjwj1k6dr" path="res://models/mob/Mob0.glb" id="2_rlhm3"]
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_nooxl"]
-radius = 0.8378906
-height = 1.7050683
-
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_s8lw5"]
 radius = 0.6948242
 height = 1.5917969
 
 [node name="BaseMobSmall" unique_id=1769357514 instance=ExtResource("1_s8lw5")]
-StatsPath = NodePath("MobStats")
+collision_mask = 1
 DamageIndicatorOffset = Vector3(0, 1, 0)
 
-[node name="CollisionShape3D" parent="." index="0" unique_id=179537389]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85857666, 0)
-shape = SubResource("CapsuleShape3D_nooxl")
+[node name="Area3D#CollisionShape3D" type="CollisionShape3D" parent="." index="0" unique_id=179537389]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8266982, 0)
+shape = SubResource("CapsuleShape3D_s8lw5")
 
 [node name="Model" parent="." index="1" unique_id=1758400404 instance=ExtResource("2_rlhm3")]
 
-[node name="Area3D" parent="." index="3" unique_id=596901717]
+[node name="Body" parent="." index="3" unique_id=596901717]
 collision_mask = 10
-
-[node name="CollisionShape3D" parent="Area3D" index="0" unique_id=1769415485]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8266982, 0)
-shape = SubResource("CapsuleShape3D_s8lw5")

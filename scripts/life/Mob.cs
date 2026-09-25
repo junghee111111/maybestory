@@ -31,7 +31,7 @@ public abstract partial class Mob : Life<MobStats>
         _visualModel = GetNode<Node3D>(VisualModelPath);
         _animPlayer = GetNode<AnimationPlayer>(AnimationPlayerPath);
         _MobVolumeCollision = GetNode<CollisionShape3D>("CollisionShape3D");
-        _MobHurtboxArea = GetNode<Area3D>("Area3D");
+        _MobHurtboxArea = GetNode<Area3D>("Body");
 
         if (MobData != null && Stats != null)
         {
@@ -66,6 +66,7 @@ public abstract partial class Mob : Life<MobStats>
 
     public void TakePartDamage(string partName, int[] damages, Vector3 hitSourcePosition, bool[] criticals, string subText = "")
     {
+        // GD.Print($"Taking part damage on {partName} with damages: {string.Join(",", damages)}");
         float multiplier = GetPartDamageMultiplier(partName);
         if (!Mathf.IsEqualApprox(multiplier, 1.0f))
         {

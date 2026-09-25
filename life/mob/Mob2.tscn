@@ -1,11 +1,43 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://cxslywxdvkg4w"]
 
-[ext_resource type="PackedScene" path="res://life/mob/base/BaseMobLarge.tscn" id="1_lrg01"]
-[ext_resource type="PackedScene" uid="uid://uhvcjwj1k6dr" path="res://models/mob/Mob0.glb" id="2_model"]
+[ext_resource type="PackedScene" uid="uid://b3lnfvk8ete1k" path="res://life/mob/base/BaseMobLarge.tscn" id="1_lrg01"]
+[ext_resource type="PackedScene" uid="uid://c5jklrb8qm2nt" path="res://models/mob/Mob2.fbx" id="2_82tvt"]
 
-[node name="BaseMobLarge" instance=ExtResource("1_lrg01")]
-StatsPath = NodePath("MobStats")
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_82tvt"]
+radius = 0.7
+height = 1.4
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_82tvt"]
+radius = 1.0
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_4mcog"]
+radius = 0.697
+height = 2.58
+
+[node name="BaseMobLarge" unique_id=1763417817 instance=ExtResource("1_lrg01")]
+collision_mask = 1
 DamageIndicatorOffset = Vector3(0, 1.6, 0)
 
-[node name="Model" parent="." index="1" instance=ExtResource("2_model")]
-transform = Transform3D(1.7, 0, 0, 0, 1.7, 0, 0, 0, 1.7, 0, 0, 0)
+[node name="Model" parent="." index="0" unique_id=86936436 instance=ExtResource("2_82tvt")]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.3665539, 0)
+
+[node name="Body" parent="." index="3" unique_id=1566436682]
+collision_mask = 10
+
+[node name="CollisionShape3D" parent="Body" index="0" unique_id=531684946]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.739, 0)
+shape = SubResource("CapsuleShape3D_82tvt")
+
+[node name="Head" parent="." index="4" unique_id=737618901]
+collision_mask = 10
+
+[node name="CollisionShape3D" parent="Head" index="0" unique_id=1690634552]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.595, 0)
+shape = SubResource("SphereShape3D_82tvt")
+
+[node name="Leg" parent="." index="5" unique_id=2138823026]
+collision_mask = 10
+
+[node name="CollisionShape3D" parent="Leg" index="0" unique_id=781470679]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.187, 0)
+shape = SubResource("CapsuleShape3D_4mcog")

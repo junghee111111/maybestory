@@ -8,6 +8,7 @@
 [ext_resource type="Resource" uid="uid://n4aluvkdpggl" path="res://data/mob/Mob1.tres" id="3_mid01"]
 [ext_resource type="Environment" uid="uid://dlo4d1tui6x2k" path="res://demo/assets/Environment.tres" id="4_6hmbn"]
 [ext_resource type="CameraAttributesPractical" uid="uid://c41dvxjh8vfeb" path="res://demo/assets/CameraAttributes.tres" id="5_pooee"]
+[ext_resource type="Resource" uid="uid://c43jyog8qwny1" path="res://data/mob/Mob2.tres" id="7_k0q1t"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_4kxuq"]
 size = Vector3(12, 1, 5)
@@ -134,7 +135,8 @@ TargetMonsterData = ExtResource("3_mid01")
 [node name="Node3D3" type="Node3D" parent="MobSpawners" parent_id_path=PackedInt32Array(554641987) index="2" unique_id=186578254]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.608486, 1.8210392, 0)
 script = ExtResource("2_ogk54")
-TargetMonsterData = ExtResource("3_6hmbn")
+TargetMonsterData = ExtResource("7_k0q1t")
+MaxMonsters = 5
 
 [node name="Node3D4" type="Node3D" parent="MobSpawners" parent_id_path=PackedInt32Array(554641987) index="3" unique_id=1084620977]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.482357, 3.5042653, 0)

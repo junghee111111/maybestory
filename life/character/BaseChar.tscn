@@ -4,7 +4,7 @@
 
 [node name="BaseChar" unique_id=1037696582 instance=ExtResource("1_nga4d")]
 
-[node name="Skeleton3D" parent="Armature" parent_id_path=PackedInt32Array(519459614) index="0" unique_id=1333787180]
+[node name="Skeleton3D" parent="Armature" parent_id_path=PackedInt32Array(2032566652) index="0" unique_id=1075258432]
 bones/0/rotation = Quaternion(-2.9802326e-08, 1.1920927e-07, -2.5243543e-29, 1)
 bones/1/rotation = Quaternion(-3.5527137e-15, -1.1920927e-07, 4.2351645e-22, 1)
 bones/2/rotation = Quaternion(-3.5527103e-15, 1.19209275e-07, -4.235168e-22, 1)
@@ -30,3 +30,5 @@ bones/21/rotation = Quaternion(-3.1497106e-07, 3.6921372e-07, 0.7071068, 0.70710
 transform = Transform3D(-0.10384276, 0.00284645, 0.9945897, 0.9922348, 0.069125056, 0.10339909, -0.068456694, 0.99760383, -0.010002518, -0.600307, 0.49422497, 0.24062863)
 bone_name = "Weapon.R"
 bone_idx = 13
+
+[node name="PhysicalBoneSimulator3D" type="PhysicalBoneSimulator3D" parent="Armature/Skeleton3D" index="2" unique_id=2007734369]

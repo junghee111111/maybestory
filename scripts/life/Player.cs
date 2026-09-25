@@ -7,10 +7,12 @@ public partial class Player : Life<PlayerStats>
 	[Export] public NodePath AnimationPlayerPath = "BaseChar/AnimationPlayer";
 	[Export] public NodePath VisualModelPath = "BaseChar";
 	[Export] public NodePath MobHitboxDetectorPath = "MobHitboxDetector";
+	[Export] public NodePath BoneSimulatorPath = "BaseChar/Armature/Skeleton3D/PhysicalBoneSimulator3D";
 	[Export] public float PickupRadius = 2.5f;
 
 	private AnimationPlayer _animationPlayer;
 	private Node3D _visualModel;
+	private PhysicalBoneSimulator3D _boneSimulator;
 	private Area3D _mobHitboxDetector;
 	private BaseMap _currentMap;
 	private EquipManager _equipManager;
@@ -36,6 +38,7 @@ public partial class Player : Life<PlayerStats>
 
 		_animationPlayer = GetNode<AnimationPlayer>(AnimationPlayerPath);
 		_visualModel = GetNode<Node3D>(VisualModelPath);
+		_boneSimulator = GetNode<PhysicalBoneSimulator3D>(BoneSimulatorPath);
 		_mobHitboxDetector = GetNode<Area3D>(MobHitboxDetectorPath);
 
 		_animationPlayer.AnimationFinished += OnAnimationFinished;
@@ -254,8 +257,12 @@ public partial class Player : Life<PlayerStats>
 	public override void OnDeath()
 	{
 		_isAttacking = false;
+		_animationPlayer.Active = false;
+		_animationPlayer.Stop(); //씨발 이걸 넣어야함
 		SetPhysicsProcess(false);
-		PlayAnimationIfNotPlaying("Die");
+
+		_boneSimulator.PhysicalBonesStartSimulation();
+
 		Stats?.ApplyDeathExpPenalty();
 	}
 }

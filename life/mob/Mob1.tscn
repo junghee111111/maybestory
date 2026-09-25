@@ -1,9 +1,26 @@
 [gd_scene format=3 uid="uid://b463klbxoc2xu"]
 
 [ext_resource type="PackedScene" uid="uid://chcjfnric2e4b" path="res://models/mob/Mob1.fbx" id="1_0hi6v"]
-[ext_resource type="PackedScene" path="res://life/mob/base/BaseMobMiddle.tscn" id="1_mid01"]
+[ext_resource type="PackedScene" uid="uid://c2p4lbnfx71ar" path="res://life/mob/base/BaseMobMiddle.tscn" id="1_mid01"]
 
 [node name="BaseMobMiddle" unique_id=1899405081 instance=ExtResource("1_mid01")]
+collision_mask = 1
 
 [node name="Model" parent="." index="0" unique_id=1919403535 instance=ExtResource("1_0hi6v")]
 transform = Transform3D(100, 0, 0, 0, 100, 0, 0, 0, 100, 0, 0, 0)
+
+[node name="CollisionShape3D" parent="." index="1" unique_id=1872693345]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.93562084, 0)
+
+[node name="Body" parent="." index="3" unique_id=1752613702]
+collision_mask = 10
+
+[node name="CollisionShape3D" parent="Body" index="0" unique_id=730111429]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.018480778, 1.04, 0)
+
+[node name="Head" parent="." index="4" unique_id=499142999]
+collision_mask = 10
+priority = 1
+
+[node name="CollisionShape3D" parent="Head" index="0" unique_id=1578413625]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.6575537, 0)

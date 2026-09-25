@@ -60,6 +60,7 @@ public abstract partial class Life<TStats> : CharacterBody3D where TStats : Life
         {
             int actualDamage = Stats.TakeDamage(damages[i]);
             bool isCritical = criticals != null && i < criticals.Length && criticals[i];
+
             DamageIndicator.Spawn(GetTree().CurrentScene, GlobalPosition + DamageIndicatorOffset, actualDamage, isCritical, subText);
 
             // 즉사 타격이어도 넉백은 적용되어야 하므로 IsDead 체크보다 먼저 계산한다. (넉백은 최초 타격 기준 1회만 적용)

@@ -251,7 +251,7 @@ public partial class SkillManager : Node
                 vfx.GlobalPosition = target.GlobalPosition + skill.HitVfxTargetOffset;
             }
 
-            target.TakePartDamage(part, damages, _player.GlobalPosition, criticals, "");
+            target.TakePartDamage(part, damages, _player.GlobalPosition, criticals, subText: part == "Head" ? "HeadShot!" : part == "Leg" ? "Leg Shot.." : "");
         }
     }
 
@@ -298,26 +298,39 @@ public partial class SkillManager : Node
 
         // 바라보는 방향으로 가로폭의 절반만큼 밀어 캐릭터 앞쪽만 판정되도록 한다.
         float facingDir = _player.GetNode<Node3D>("BaseChar").RotationDegrees.Y > 0 ? 1.0f : -1.0f;
-        Vector3 center = _player.GlobalPosition + skill.AttackRangeOffset + new Vector3(facingDir * size.X * 0.5f, size.Y * 0.5f, 0);
+        Vector3 center = _player.GlobalPosition
+        + new Vector3(skill.AttackRangeOffset.X * facingDir, skill.AttackRangeOffset.Y, skill.AttackRangeOffset.Z)
+        + new Vector3(facingDir * size.X * 0.5f, size.Y * 0.5f, 0);
+
         var spaceState = _player.GetWorld3D().DirectSpaceState;
 
+        // 부위 판정은 Mob 본체(layer 4)가 아니라 Head/Leg/Body Area3D(layer 16)를 대상으로 해야 한다.
         var bodyQuery = new PhysicsShapeQueryParameters3D
         {
             Shape = new BoxShape3D { Size = size },
             Transform = new Transform3D(Basis.Identity, center),
-            CollisionMask = 5,
+            CollisionMask = 16,
+            CollideWithBodies = false,
+            CollideWithAreas = true,
         };
 
         DrawDebugHitbox(center, size);
 
+        var found = new Dictionary<Mob, string>();
         foreach (var hit in spaceState.IntersectShape(bodyQuery))
         {
+            if (hit["collider"].As<Node>() is not Area3D area) continue;
+            if (area.GetParent() is not Mob mob) continue;
+
+            string areaName = area.Name.ToString();
+            string part = areaName is "Head" or "Leg" ? areaName : "Body";
+            found[mob] = found.TryGetValue(mob, out string existing) ? PickBestPart(existing, part) : part;
+        }
+
+        foreach (var (mob, part) in found)
+        {
             if (targets.Count >= skill.TargetCount) break;
-            if (hit["collider"].As<Node>() is Mob mob && !targets.Exists(t => t.Mob == mob))
-            {
-                // 가상 박스는 뫁통 물리 바디만 감지하므로 항상 "Body"로 처리한다.
-                targets.Add((mob, "Body"));
-            }
+            targets.Add((mob, part));
         }
 
         return targets;

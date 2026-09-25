@@ -5,6 +5,7 @@ using System;
 public partial class LifeStats : Node
 {
     public event Action OnHpChanged;
+    public event Action OnMpChanged;
     public event Action OnDied;
     public event Action OnStatsChanged;
 
@@ -53,7 +54,7 @@ public partial class LifeStats : Node
     public virtual void ConsumeMp(int amount)
     {
         CurrentMp = Mathf.Max(0, CurrentMp - amount);
-        OnStatsChanged?.Invoke();
+        OnMpChanged?.Invoke();
     }
 
 
@@ -66,7 +67,7 @@ public partial class LifeStats : Node
     public virtual void RestoreMp(int amount)
     {
         CurrentMp = Mathf.Min(MaxMp, CurrentMp + amount);
-        OnStatsChanged?.Invoke();
+        OnMpChanged?.Invoke();
     }
 
     public virtual void RestoreHp(int amount)

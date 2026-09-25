@@ -136,6 +136,7 @@ label_settings = SubResource("LabelSettings_fijhj")
 [node name="TextureProgressBar" type="TextureProgressBar" parent="UILayer/StatusPanel/HBoxContainer/HPContainer" unique_id=920915179]
 layout_mode = 2
 size_flags_vertical = 3
+step = 0.1
 value = 50.0
 texture_under = SubResource("GradientTexture2D_fkauo")
 texture_over = SubResource("GradientTexture2D_h777x")
@@ -152,6 +153,7 @@ label_settings = SubResource("LabelSettings_fijhj")
 [node name="TextureProgressBar" type="TextureProgressBar" parent="UILayer/StatusPanel/HBoxContainer/MPContainer" unique_id=853074123]
 layout_mode = 2
 size_flags_vertical = 3
+step = 0.1
 value = 50.0
 texture_under = SubResource("GradientTexture2D_fkauo")
 texture_over = SubResource("GradientTexture2D_h777x")
@@ -168,6 +170,7 @@ label_settings = SubResource("LabelSettings_fijhj")
 [node name="TextureProgressBar" type="TextureProgressBar" parent="UILayer/StatusPanel/HBoxContainer/EXPContainer" unique_id=1694155185]
 layout_mode = 2
 size_flags_vertical = 3
+step = 0.1
 value = 50.0
 texture_under = SubResource("GradientTexture2D_fkauo")
 texture_over = SubResource("GradientTexture2D_h777x")
@@ -252,17 +255,17 @@ Key = "F"
 [node name="InventoryUI" parent="UILayer" unique_id=1306835286 instance=ExtResource("3_invui")]
 layout_mode = 3
 
-[node name="EquipmentUI" parent="UILayer" instance=ExtResource("5_equipui")]
+[node name="EquipmentUI" parent="UILayer" unique_id=2004293118 instance=ExtResource("5_equipui")]
 layout_mode = 3
 
-[node name="SkillUI" parent="UILayer" instance=ExtResource("6_skillui")]
+[node name="SkillUI" parent="UILayer" unique_id=304236572 instance=ExtResource("6_skillui")]
 layout_mode = 3
 
-[node name="StatUI" parent="UILayer" instance=ExtResource("7_statui")]
+[node name="StatUI" parent="UILayer" unique_id=511700648 instance=ExtResource("7_statui")]
 layout_mode = 3
 
-[node name="WorldMapUI" parent="UILayer" instance=ExtResource("8_mapui")]
+[node name="WorldMapUI" parent="UILayer" unique_id=1274337982 instance=ExtResource("8_mapui")]
 layout_mode = 3
 
-[node name="QuestUI" parent="UILayer" instance=ExtResource("9_questui")]
+[node name="QuestUI" parent="UILayer" unique_id=840938563 instance=ExtResource("9_questui")]
 layout_mode = 3
