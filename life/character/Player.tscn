@@ -21,6 +21,7 @@ collision_layer = 2
 collision_mask = 17
 script = ExtResource("1_bfich")
 StatsPath = NodePath("PlayerStats")
+KnockbackThresholdPercentage = 0.1
 
 [node name="BaseChar" parent="." unique_id=1037696582 instance=ExtResource("2_cl83g")]
 

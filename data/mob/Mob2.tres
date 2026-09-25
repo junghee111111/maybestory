@@ -1,7 +1,8 @@
-[gd_resource type="Resource" script_class="MobStatsData" format=3]
+[gd_resource type="Resource" script_class="MobStatsData" format=3 uid="uid://c43jyog8qwny1"]
 
-[ext_resource type="PackedScene" path="res://life/mob/Mob2.tscn" id="1_scene"]
+[ext_resource type="Script" uid="uid://jmt8pv1drfxm" path="res://resources/ItemDropData.cs" id="1_oqh4o"]
 [ext_resource type="Script" uid="uid://bnte87y05g05v" path="res://resources/MobStatsData.cs" id="1_q4hsp"]
+[ext_resource type="PackedScene" path="res://life/mob/Mob2.tscn" id="1_scene"]
 
 [resource]
 script = ExtResource("1_q4hsp")

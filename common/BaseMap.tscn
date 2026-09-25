@@ -6,6 +6,8 @@
 script = ExtResource("1_mkb3j")
 CameraDistance = 7.0
 
+[node name="CamBounds" type="Node3D" parent="." unique_id=1934448944]
+
 [node name="Platforms" type="Node3D" parent="." unique_id=1182424747]
 
 [node name="Life" type="Node3D" parent="." unique_id=744923453]
@@ -15,7 +17,5 @@ CameraDistance = 7.0
 [node name="Portals" type="Node3D" parent="." unique_id=542939105]
 
 [node name="MobSpawners" type="Node3D" parent="." unique_id=554641987]
-
-[node name="CamBounds" type="Node3D" parent="." unique_id=1934448944]
 
 [node name="Backgrounds" type="Node3D" parent="." unique_id=1343191887]

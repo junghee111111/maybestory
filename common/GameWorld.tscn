@@ -1,21 +1,35 @@
 [gd_scene format=3 uid="uid://dw72i24hj5mtw"]
 
 [ext_resource type="Script" uid="uid://dvijbywig0qns" path="res://scripts/core/MapManager.cs" id="1_6uab5"]
+[ext_resource type="Script" uid="uid://divxmpd1fypgk" path="res://scripts/core/GameManager.cs" id="1_gamemgr"]
+[ext_resource type="Script" uid="uid://dtjgmi73bncaj" path="res://scripts/core/InventoryManager.cs" id="1_invmgr"]
 [ext_resource type="Script" uid="uid://dyfhca5teb8b6" path="res://scripts/core/KeyboardManager.cs" id="1_jvlke"]
-[ext_resource type="Script" path="res://scripts/core/GameManager.cs" id="1_gamemgr"]
-[ext_resource type="Script" path="res://scripts/core/WindowManager.cs" id="1_winmgr"]
-[ext_resource type="Script" path="res://scripts/core/InventoryManager.cs" id="1_invmgr"]
+[ext_resource type="Script" uid="uid://baput85xwte1b" path="res://scripts/core/WindowManager.cs" id="1_winmgr"]
 [ext_resource type="Script" uid="uid://ray7pgjfjdxs" path="res://scripts/core/CameraController.cs" id="2_bp2gk"]
 [ext_resource type="PackedScene" uid="uid://db0d5qldeejq5" path="res://life/character/Player.tscn" id="3_bp2gk"]
+[ext_resource type="PackedScene" uid="uid://des8lwr1hv5ni" path="res://map/Map0.tscn" id="4_afxer"]
 [ext_resource type="PackedScene" uid="uid://bdpbrf1dhgwxh" path="res://ui/MainHUD.tscn" id="4_uecoe"]
 [ext_resource type="PackedScene" uid="uid://u1cx757yqu5w" path="res://item/etc/coin.tscn" id="4_y0hbh"]
-[ext_resource type="Script" path="res://scripts/core/GameWorldBootstrap.cs" id="5_bootstrap"]
+[ext_resource type="Script" uid="uid://dh15qqlsokq44" path="res://scripts/core/GameWorldBootstrap.cs" id="5_bootstrap"]
 
 [node name="GameWorld" type="Node3D" unique_id=1381227503]
 script = ExtResource("5_bootstrap")
 
+[node name="MapContainer" type="Node3D" parent="." unique_id=1481868759]
+
+[node name="CameraController" type="Node3D" parent="." unique_id=1990251166]
+script = ExtResource("2_bp2gk")
+RelativeYPos = 1.0
+
+[node name="Camera3D" type="Camera3D" parent="CameraController" unique_id=1164072480]
+
 [node name="GameManager" type="Node" parent="." unique_id=845729015]
 script = ExtResource("1_gamemgr")
+
+[node name="MapManager" type="Node" parent="." unique_id=2061607347]
+script = ExtResource("1_6uab5")
+StartingMap = ExtResource("4_afxer")
+CoinModel = ExtResource("4_y0hbh")
 
 [node name="KeyboardManager" type="Node" parent="." unique_id=496760227]
 script = ExtResource("1_jvlke")
@@ -25,18 +39,6 @@ script = ExtResource("1_winmgr")
 
 [node name="InventoryManager" type="Node" parent="." unique_id=1284975643]
 script = ExtResource("1_invmgr")
-
-[node name="CameraController" type="Node3D" parent="." unique_id=1990251166]
-script = ExtResource("2_bp2gk")
-RelativeYPos = 1.0
-
-[node name="Camera3D" type="Camera3D" parent="CameraController" unique_id=1164072480]
-
-[node name="MapContainer" type="Node3D" parent="." unique_id=1481868759]
-
-[node name="MapManager" type="Node" parent="." unique_id=2061607347]
-script = ExtResource("1_6uab5")
-CoinModel = ExtResource("4_y0hbh")
 
 [node name="LifeContainer" type="Node3D" parent="." unique_id=312761622]
 

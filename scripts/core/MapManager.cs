@@ -37,6 +37,7 @@ public partial class MapManager : Node
 	// spawnAtPortal이 true면 spawnPointName을 새 맵의 Portals 컨테이너에서 PortalId로 찾아 스폰한다.
 	public void ChangeMap(PackedScene mapScene, string spawnPointName = "Default", bool spawnAtPortal = false)
 	{
+		GD.Print($"Changing to map: {mapScene.ResourcePath}");
 		if (mapScene == null)
 		{
 			GD.PrintErr("[MapManager] mapScene is null.");

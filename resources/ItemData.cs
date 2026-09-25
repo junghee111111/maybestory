@@ -14,7 +14,9 @@ public enum EquipSlot
     Top,
     Bottom,
     Weapon,
-    Shoes
+    Shoes,
+    Shield,
+    Earrings,
 }
 
 [GlobalClass]
